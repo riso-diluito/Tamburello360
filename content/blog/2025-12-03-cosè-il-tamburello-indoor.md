@@ -4,6 +4,7 @@ title: Cos'è il Tamburello Indoor
 date: 2025-12-03T12:00:00.000+01:00
 author: Redazione Tamburello360
 category: Lo Sport
+image: /public/images/uploads/bk4i0392_20251118_1846262426.jpg
 excerpt: ""
 reading_time: 5
 ---
