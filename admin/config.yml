@@ -1,0 +1,76 @@
+backend:
+  name: git-gateway
+  branch: main
+
+media_folder: "public/images/uploads"
+public_folder: "/public/images/uploads"
+
+collections:
+  # BLOG ARTICLES
+  - name: "blog"
+    label: "Articoli Blog"
+    folder: "content/blog"
+    create: true
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    fields:
+      - {label: "Layout", name: "layout", widget: "hidden", default: "post.njk"}
+      - {label: "Titolo", name: "title", widget: "string"}
+      - {label: "Data Pubblicazione", name: "date", widget: "datetime"}
+      - {label: "Autore", name: "author", widget: "string", default: "Redazione Tamburello360"}
+      - {label: "Categoria", name: "category", widget: "select", options: ["Ultimi Risultati", "Prossimi Incontri", "Interviste", "Lo Sport", "Squadre"]}
+      - {label: "Immagine Copertina", name: "image", widget: "image", required: false}
+      - {label: "Breve Descrizione (per anteprima)", name: "excerpt", widget: "text", required: false}
+      - {label: "Contenuto", name: "body", widget: "markdown"}
+      - {label: "Tempo di Lettura (minuti)", name: "reading_time", widget: "number", default: 5, value_type: "int", min: 1}
+
+  # CLASSIFICHE
+  - name: "classifiche"
+    label: "Classifiche"
+    folder: "content/classifiche"
+    create: true
+    slug: "{{serie}}-{{year}}"
+    fields:
+      - {label: "Serie", name: "serie", widget: "select", options: ["Serie A", "Serie B", "Serie C", "Serie D"]}
+      - {label: "Anno", name: "year", widget: "number", default: 2026, value_type: "int"}
+      - {label: "Aggiornata al", name: "updated", widget: "datetime"}
+      - label: "Squadre"
+        name: "teams"
+        widget: "list"
+        fields:
+          - {label: "Posizione", name: "position", widget: "number", value_type: "int"}
+          - {label: "Nome Squadra", name: "name", widget: "string"}
+          - {label: "Punti", name: "points", widget: "number", value_type: "int"}
+          - {label: "Vittorie", name: "wins", widget: "number", value_type: "int"}
+          - {label: "Pareggi", name: "draws", widget: "number", default: 0, value_type: "int"}
+          - {label: "Sconfitte", name: "losses", widget: "number", value_type: "int"}
+
+  # RISULTATI PARTITE
+  - name: "risultati"
+    label: "Risultati Partite"
+    folder: "content/risultati"
+    create: true
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    fields:
+      - {label: "Data Partita", name: "date", widget: "datetime"}
+      - {label: "Serie", name: "serie", widget: "select", options: ["Serie A", "Serie B", "Serie C", "Serie D"]}
+      - {label: "Squadra Casa", name: "home_team", widget: "string"}
+      - {label: "Squadra Ospite", name: "away_team", widget: "string"}
+      - {label: "Punteggio Casa", name: "home_score", widget: "number", value_type: "int"}
+      - {label: "Punteggio Ospite", name: "away_score", widget: "number", value_type: "int"}
+      - {label: "Note", name: "notes", widget: "text", required: false}
+
+  # SQUADRE
+  - name: "squadre"
+    label: "Squadre"
+    folder: "content/squadre"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - {label: "Nome Squadra", name: "name", widget: "string"}
+      - {label: "Città", name: "city", widget: "string"}
+      - {label: "Serie", name: "serie", widget: "select", options: ["Serie A", "Serie B", "Serie C", "Serie D"]}
+      - {label: "Latitudine", name: "lat", widget: "number", value_type: "float", hint: "Trova su Google Maps"}
+      - {label: "Longitudine", name: "lng", widget: "number", value_type: "float", hint: "Trova su Google Maps"}
+      - {label: "Logo", name: "logo", widget: "image", required: false}
+      - {label: "Sito Web", name: "website", widget: "string", required: false}
+      - {label: "Descrizione", name: "description", widget: "text", required: false}

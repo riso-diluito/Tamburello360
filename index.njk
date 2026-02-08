@@ -1,0 +1,98 @@
+---
+layout: base.njk
+title: Il primo sito in Italia che parla di tamburello
+---
+
+<div class="hero" style="background: linear-gradient(135deg, rgba(214, 40, 40, 0.85) 0%, rgba(157, 2, 8, 0.85) 50%, rgba(0, 48, 73, 0.85) 100%), url('https://tamburello360.altervista.org/wp-content/uploads/2025/12/cropped-bk4i8443_20251010_1268349492.jpg') center/cover;">
+    <div class="hero-content">
+        <h1>Tamburello360</h1>
+        <p>Il primo sito in Italia che parla di tamburello</p>
+        <div class="hero-buttons">
+            <a href="/blog/" class="cta-button primary">Leggi il Blog</a>
+            <a href="/classifiche/" class="cta-button secondary">Vedi Classifiche</a>
+        </div>
+    </div>
+</div>
+
+<section class="featured-section">
+    <div class="container">
+        <h2 class="section-title">Ultimi Articoli</h2>
+        <div class="articles-grid">
+            {% for post in collections.blog | reverse | limit(3) %}
+            <a href="{{ post.url }}" class="article-card">
+                {% if post.data.image %}
+                <img src="{{ post.data.image }}" alt="{{ post.data.title }}" class="article-image">
+                {% else %}
+                <img src="/public/images/placeholder.jpg" alt="{{ post.data.title }}" class="article-image">
+                {% endif %}
+                <div class="article-content">
+                    <div class="article-meta">
+                        <span class="article-category">{{ post.data.category }}</span>
+                        <span>{{ post.data.date | shortDate }}</span>
+                        {% if post.data.reading_time %}
+                        <span>⏱️ {{ post.data.reading_time }} min</span>
+                        {% endif %}
+                    </div>
+                    <h3 class="article-title">{{ post.data.title }}</h3>
+                    <p class="article-excerpt">{{ post.data.excerpt or post.templateContent | striptags | truncate(150) }}</p>
+                </div>
+            </a>
+            {% else %}
+            <div class="loading">Nessun articolo ancora. Aggiungili dal pannello admin!</div>
+            {% endfor %}
+        </div>
+        <div class="text-center">
+            <a href="/blog/" class="view-all-btn">Vedi tutti gli articoli →</a>
+        </div>
+    </div>
+</section>
+
+<section class="stats-section">
+    <div class="container">
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon">🏆</div>
+                <div class="stat-number">{{ collections.squadre.length }}</div>
+                <div class="stat-label">Squadre Totali</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">📝</div>
+                <div class="stat-number">{{ collections.blog.length }}</div>
+                <div class="stat-label">Articoli Pubblicati</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">⚡</div>
+                <div class="stat-number">{{ collections.risultati.length }}</div>
+                <div class="stat-label">Partite Registrate</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="quick-links">
+    <div class="container">
+        <h2 class="section-title">Esplora</h2>
+        <div class="links-grid">
+            <a href="/classifiche/" class="link-card">
+                <div class="link-icon">📊</div>
+                <h3>Classifiche</h3>
+                <p>Consulta le classifiche aggiornate di tutte le serie</p>
+            </a>
+            <a href="/risultati/" class="link-card">
+                <div class="link-icon">🎯</div>
+                <h3>Risultati</h3>
+                <p>Tutti i risultati delle ultime partite</p>
+            </a>
+            <a href="/squadre/" class="link-card">
+                <div class="link-icon">👥</div>
+                <h3>Squadre</h3>
+                <p>Scopri tutte le squadre del campionato</p>
+            </a>
+            <a href="/mappa/" class="link-card">
+                <div class="link-icon">🗺️</div>
+                <h3>Mappa</h3>
+                <p>Visualizza le squadre sulla mappa d'Italia</p>
+            </a>
+        </div>
+    </div>
+</section>

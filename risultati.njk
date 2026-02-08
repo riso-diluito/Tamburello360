@@ -1,0 +1,78 @@
+---
+layout: base.njk
+title: Risultati
+---
+
+<section style="padding-top: 3rem;">
+    <div class="container">
+        <h1 class="section-title">Ultimi Risultati</h1>
+        <div class="risultati-grid">
+            {% for match in collections.risultati %}
+            <div class="risultato-card">
+                <div class="risultato-header">{{ match.data.serie }} • {{ match.data.date | shortDate }}</div>
+                <div class="match-teams">
+                    <span class="team">{{ match.data.home_team }}</span>
+                    <span class="score">{{ match.data.home_score }} - {{ match.data.away_score }}</span>
+                    <span class="team">{{ match.data.away_team }}</span>
+                </div>
+                {% if match.data.notes %}
+                <p style="margin-top: 0.5rem; font-size: 0.9rem; color: #666; font-style: italic;">
+                    {{ match.data.notes }}
+                </p>
+                {% endif %}
+            </div>
+            {% else %}
+            <div class="loading">Nessun risultato ancora. Aggiungili dal pannello admin!</div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<style>
+.risultati-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 1.5rem;
+}
+
+.risultato-card {
+    background: white;
+    border-radius: 15px;
+    padding: 1.5rem;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.06);
+    transition: all 0.3s ease;
+    border-left: 4px solid var(--accent);
+}
+
+.risultato-card:hover {
+    transform: translateX(5px);
+    box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+}
+
+.risultato-header {
+    font-size: 0.85rem;
+    color: #666;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.match-teams {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.team {
+    font-weight: 600;
+    font-size: 1.1rem;
+    color: var(--secondary);
+}
+
+.score {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2rem;
+    color: var(--primary);
+    padding: 0 1rem;
+}
+</style>

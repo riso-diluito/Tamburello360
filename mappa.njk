@@ -1,0 +1,109 @@
+---
+layout: base.njk
+title: Mappa delle Squadre
+---
+
+<section style="padding-top: 3rem;">
+    <div class="container">
+        <h1 class="section-title">Mappa delle Squadre</h1>
+        <div id="map" style="height: 600px; border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); margin-top: 2rem;"></div>
+    </div>
+</section>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+    // Inizializza la mappa centrata sull'Italia del Nord
+    const map = L.map('map').setView([45.4, 11.0], 7);
+
+    // Aggiungi il layer della mappa
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap contributors',
+        maxZoom: 18
+    }).addTo(map);
+
+    // Dati delle squadre dal CMS
+    const squadre = [
+        {% for squadra in collections.squadre %}
+        {
+            nome: "{{ squadra.data.name }}",
+            citta: "{{ squadra.data.city }}",
+            lat: {{ squadra.data.lat }},
+            lng: {{ squadra.data.lng }},
+            serie: "{{ squadra.data.serie }}",
+            {% if squadra.data.description %}
+            description: "{{ squadra.data.description }}",
+            {% endif %}
+            {% if squadra.data.website %}
+            website: "{{ squadra.data.website }}"
+            {% endif %}
+        }{% if not loop.last %},{% endif %}
+        {% endfor %}
+    ];
+
+    // Icone personalizzate per Serie
+    const iconA = L.divIcon({
+        className: 'custom-marker',
+        html: '<div style="background: #d62828; color: white; width: 35px; height: 35px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; border: 3px solid white; box-shadow: 0 2px 10px rgba(0,0,0,0.3); font-size: 16px;">A</div>',
+        iconSize: [35, 35]
+    });
+
+    const iconB = L.divIcon({
+        className: 'custom-marker',
+        html: '<div style="background: #f77f00; color: white; width: 35px; height: 35px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; border: 3px solid white; box-shadow: 0 2px 10px rgba(0,0,0,0.3); font-size: 16px;">B</div>',
+        iconSize: [35, 35]
+    });
+
+    const iconC = L.divIcon({
+        className: 'custom-marker',
+        html: '<div style="background: #003049; color: white; width: 35px; height: 35px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; border: 3px solid white; box-shadow: 0 2px 10px rgba(0,0,0,0.3); font-size: 16px;">C</div>',
+        iconSize: [35, 35]
+    });
+
+    const iconD = L.divIcon({
+        className: 'custom-marker',
+        html: '<div style="background: #6c757d; color: white; width: 35px; height: 35px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; border: 3px solid white; box-shadow: 0 2px 10px rgba(0,0,0,0.3); font-size: 16px;">D</div>',
+        iconSize: [35, 35]
+    });
+
+    function getIcon(serie) {
+        if (serie === 'Serie A') return iconA;
+        if (serie === 'Serie B') return iconB;
+        if (serie === 'Serie C') return iconC;
+        if (serie === 'Serie D') return iconD;
+        return iconA;
+    }
+
+    // Aggiungi i marker per ogni squadra
+    squadre.forEach(squadra => {
+        const marker = L.marker([squadra.lat, squadra.lng], {
+            icon: getIcon(squadra.serie)
+        }).addTo(map);
+
+        let popupContent = `
+            <div class="map-popup" style="font-family: 'Outfit', sans-serif;">
+                <h4 style="font-family: 'Bebas Neue', sans-serif; font-size: 1.3rem; color: #d62828; margin-bottom: 0.5rem;">${squadra.nome}</h4>
+                <p style="margin: 0.25rem 0;"><strong>Città:</strong> ${squadra.citta}</p>
+                <p style="margin: 0.25rem 0;"><strong>Serie:</strong> ${squadra.serie}</p>
+        `;
+        
+        if (squadra.description) {
+            popupContent += `<p style="margin-top: 0.5rem; font-size: 0.9rem; color: #666;">${squadra.description}</p>`;
+        }
+        
+        if (squadra.website) {
+            popupContent += `<p style="margin-top: 0.5rem;"><a href="${squadra.website}" target="_blank" style="color: #f77f00; text-decoration: none; font-weight: 600;">Visita sito →</a></p>`;
+        }
+        
+        popupContent += `</div>`;
+
+        marker.bindPopup(popupContent);
+    });
+
+    {% if collections.squadre.length == 0 %}
+    // Messaggio se non ci sono squadre
+    const noDataDiv = document.createElement('div');
+    noDataDiv.style.cssText = 'position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 2rem; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); z-index: 1000; text-align: center;';
+    noDataDiv.innerHTML = '<h3 style="color: #d62828; margin-bottom: 1rem;">Nessuna squadra sulla mappa</h3><p>Aggiungi squadre dal pannello admin!</p>';
+    document.getElementById('map').appendChild(noDataDiv);
+    {% endif %}
+</script>

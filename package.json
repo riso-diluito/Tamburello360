@@ -1,0 +1,19 @@
+{
+  "name": "tamburello360",
+  "version": "1.0.0",
+  "description": "Il primo sito in Italia che parla di tamburello",
+  "scripts": {
+    "build": "eleventy",
+    "serve": "eleventy --serve",
+    "start": "eleventy --serve"
+  },
+  "keywords": ["tamburello", "sport"],
+  "author": "Tamburello360",
+  "license": "MIT",
+  "devDependencies": {
+    "@11ty/eleventy": "^2.0.1"
+  },
+  "dependencies": {
+    "markdown-it": "^13.0.1"
+  }
+}

@@ -1,0 +1,106 @@
+---
+layout: base.njk
+title: Squadre
+---
+
+<section style="padding-top: 3rem;">
+    <div class="container">
+        <h1 class="section-title">Tutte le Squadre</h1>
+        
+        <div class="squadre-grid">
+            {% for squadra in collections.squadre %}
+            <div class="squadra-card">
+                {% if squadra.data.logo %}
+                <img src="{{ squadra.data.logo }}" alt="{{ squadra.data.name }}" class="squadra-logo">
+                {% endif %}
+                <h3>{{ squadra.data.name }}</h3>
+                <p class="squadra-info">
+                    <span class="info-label">📍 Città:</span> {{ squadra.data.city }}<br>
+                    <span class="info-label">🏆 Serie:</span> {{ squadra.data.serie }}
+                </p>
+                {% if squadra.data.description %}
+                <p class="squadra-desc">{{ squadra.data.description }}</p>
+                {% endif %}
+                {% if squadra.data.website %}
+                <a href="{{ squadra.data.website }}" target="_blank" class="squadra-link">Sito Web →</a>
+                {% endif %}
+            </div>
+            {% else %}
+            <div class="loading">Nessuna squadra ancora. Aggiungile dal pannello admin!</div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<style>
+.squadre-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 2rem;
+}
+
+.squadra-card {
+    background: white;
+    border-radius: 15px;
+    padding: 2rem;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+    transition: all 0.3s ease;
+    text-align: center;
+    border-top: 3px solid var(--primary);
+}
+
+.squadra-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+}
+
+.squadra-logo {
+    width: 80px;
+    height: 80px;
+    object-fit: contain;
+    margin-bottom: 1rem;
+}
+
+.squadra-card h3 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.8rem;
+    color: var(--secondary);
+    margin-bottom: 1rem;
+}
+
+.squadra-info {
+    text-align: left;
+    margin: 1rem 0;
+    font-size: 0.95rem;
+    line-height: 1.8;
+}
+
+.info-label {
+    font-weight: 600;
+    color: var(--primary);
+}
+
+.squadra-desc {
+    font-size: 0.9rem;
+    color: #666;
+    margin: 1rem 0;
+    text-align: left;
+}
+
+.squadra-link {
+    display: inline-block;
+    margin-top: 1rem;
+    padding: 0.5rem 1.5rem;
+    background: var(--accent);
+    color: white;
+    text-decoration: none;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+}
+
+.squadra-link:hover {
+    background: var(--primary);
+    transform: translateX(5px);
+}
+</style>

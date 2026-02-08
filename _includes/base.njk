@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% if title %}{{ title }} - {% endif %}Tamburello360</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/public/css/style.css">
+    <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+</head>
+<body>
+    <header>
+        <nav>
+            <a href="/" class="logo-link">
+                <img src="https://tamburello360.altervista.org/wp-content/uploads/2025/11/cropped-cropped-cropped-cropped-cropped-360.png" alt="Tamburello360" class="logo-img">
+            </a>
+            <ul class="nav-menu">
+                <li><a href="/">Home</a></li>
+                <li><a href="/blog/">Blog</a></li>
+                <li><a href="/classifiche/">Classifiche</a></li>
+                <li><a href="/risultati/">Risultati</a></li>
+                <li><a href="/squadre/">Squadre</a></li>
+                <li><a href="/mappa/">Mappa</a></li>
+            </ul>
+            <button class="admin-btn" onclick="window.location.href='/admin'">Admin</button>
+        </nav>
+    </header>
+
+    {{ content | safe }}
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-col">
+                    <h3>Tamburello360</h3>
+                    <p>Il primo sito in Italia dedicato al tamburello</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Link Rapidi</h4>
+                    <ul>
+                        <li><a href="/blog/">Blog</a></li>
+                        <li><a href="/classifiche/">Classifiche</a></li>
+                        <li><a href="/risultati/">Risultati</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Informazioni</h4>
+                    <ul>
+                        <li><a href="/chi-siamo/">Chi Siamo</a></li>
+                        <li><a href="/contatti/">Contatti</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 Tamburello360. Tutti i diritti riservati.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Netlify Identity Widget
+        if (window.netlifyIdentity) {
+            window.netlifyIdentity.on("init", user => {
+                if (!user) {
+                    window.netlifyIdentity.on("login", () => {
+                        document.location.href = "/admin/";
+                    });
+                }
+            });
+        }
+    </script>
+</body>
+</html>
