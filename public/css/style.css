@@ -35,6 +35,29 @@ header {
     top: 0;
     z-index: 1000;
     box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    transition: all 0.3s ease;
+}
+
+header.scrolled {
+    padding: 0;
+}
+
+header.scrolled nav {
+    padding: 0.75rem 2rem;
+}
+
+header.scrolled .logo-img {
+    height: 45px;
+    width: 45px;
+}
+
+header.scrolled .nav-menu a {
+    font-size: 0.95rem;
+}
+
+header.scrolled .admin-btn {
+    padding: 0.5rem 1.2rem;
+    font-size: 0.9rem;
 }
 
 nav {
@@ -62,8 +85,10 @@ nav {
 
 .logo-img {
     height: 60px;
-    width: auto;
-    transition: transform 0.3s ease;
+    width: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+    transition: all 0.3s ease;
 }
 
 .logo-img:hover {
@@ -118,7 +143,7 @@ nav {
 
 /* HERO SECTION */
 .hero {
-    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 50%, var(--secondary) 100%);
+    background: linear-gradient(135deg, rgba(214, 40, 40, 0.7) 0%, rgba(157, 2, 8, 0.7) 50%, rgba(0, 48, 73, 0.7) 100%);
     padding: 8rem 2rem 6rem;
     text-align: center;
     position: relative;
@@ -151,6 +176,13 @@ nav {
     margin-bottom: 1rem;
     letter-spacing: 4px;
     text-transform: uppercase;
+}
+
+.hero-sup {
+    font-size: 0.6em;
+    vertical-align: super;
+    position: relative;
+    top: -0.3em;
 }
 
 .hero p {
