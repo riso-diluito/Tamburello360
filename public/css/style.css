@@ -524,3 +524,14 @@ footer {
     box-shadow: 0 5px 20px rgba(0,0,0,0.08);
 }
 
+.article-card {
+    text-decoration: none;
+}
+
+.article-title {
+    text-decoration: none;
+}
+
+a.article-card:hover .article-title {
+    text-decoration: none;
+}
