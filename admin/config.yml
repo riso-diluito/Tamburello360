@@ -1,6 +1,8 @@
 backend:
   name: git-gateway
   branch: main
+  base_url: https://tamburello360.netlify.app
+  auth_endpoint: api/auth
 
 media_folder: "public/images/uploads"
 public_folder: "/public/images/uploads"
@@ -74,3 +76,17 @@ collections:
       - {label: "Logo", name: "logo", widget: "image", required: false}
       - {label: "Sito Web", name: "website", widget: "string", required: false}
       - {label: "Descrizione", name: "description", widget: "text", required: false}
+```
+
+---
+
+### STEP 2: Configura Netlify
+
+1. Vai su **Netlify** → vecchio sito → **Site settings** → **Identity**
+2. Scroll fino a **"Registration preferences"**
+3. In **"External providers"** (o "Services") → **Git Gateway** → dovrebbe essere già abilitato
+4. Cerca **"Site information"** o simile
+5. Aggiungi agli **"Allowed external redirect URLs"**:
+```
+   https://tamburello360.vercel.app/admin/
+   https://tamburello360.vercel.app/
