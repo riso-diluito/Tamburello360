@@ -1,5 +1,6 @@
 module.exports = function(eleventyConfig) {
-  eleventyConfig.addPassthroughCopy({"public": "."});
+  eleventyConfig.addPassthroughCopy("public");
+  eleventyConfig.addPassthroughCopy("admin/**/*");
   
   eleventyConfig.addFilter("readableDate", dateObj => {
     return new Date(dateObj).toLocaleDateString('it-IT', {
