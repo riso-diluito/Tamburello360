@@ -1,6 +1,9 @@
 backend:
-name: git-gateway
-branch: main
+  name: github
+  repo: riso-diluito/Tamburello360
+  branch: main
+  base_url: https://tamburello360-auth.mattiag030507.workers.dev
+  auth_endpoint: /auth
 
 media_folder: public/images/uploads
 public_folder: /public/images/uploads
