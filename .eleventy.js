@@ -1,9 +1,5 @@
 module.exports = function(eleventyConfig) {
-  eleventyConfig.addPassthroughCopy({"public/css": "css"});
-  eleventyConfig.addPassthroughCopy({"public/images": "images"});
-  eleventyConfig.addPassthroughCopy({"public/admin": "admin"});
-  eleventyConfig.ignores.add("public/admin/index.html");
-  eleventyConfig.ignores.add("public/admin/config.yml");
+  eleventyConfig.addPassthroughCopy("public");
 
   eleventyConfig.addFilter("readableDate", dateObj => {
     return new Date(dateObj).toLocaleDateString('it-IT', {
