@@ -1,6 +1,6 @@
 [build]
   publish = "_site"
-  command = "npm install && npx @11ty/eleventy"
+  command = "npm install && node scripts/genera-classifiche.js && npx @11ty/eleventy"
 
 [build.environment]
   NODE_VERSION = "18"
