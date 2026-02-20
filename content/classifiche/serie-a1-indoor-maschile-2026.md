@@ -1,7 +1,7 @@
 ---
 serie: Serie A1 Indoor Maschile
 year: 2026
-updated: 2026-02-20T17:29:36.172Z
+updated: 2026-02-20T22:35:52.383Z
 teams:
   - position: 1
     name: Segno
