@@ -1,0 +1,49 @@
+name: Aggiorna Risultati e Classifiche
+
+on:
+  # Gira ogni notte alle 23:00 ora italiana (22:00 UTC)
+  schedule:
+    - cron: '0 22 * * *'
+  
+  # Permette di lanciarlo manualmente dalla tab Actions su GitHub
+  workflow_dispatch:
+
+jobs:
+  aggiorna:
+    runs-on: ubuntu-latest
+    
+    permissions:
+      contents: write  # necessario per fare commit
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Scarica nuovi risultati
+        run: node scripts/fetch-risultati.js
+
+      - name: Rigenera classifiche
+        run: node scripts/genera-classifiche.js
+
+      - name: Controlla se ci sono modifiche
+        id: check_changes
+        run: |
+          git diff --quiet && git diff --staged --quiet || echo "changes=true" >> $GITHUB_OUTPUT
+
+      - name: Commit e push se ci sono novità
+        if: steps.check_changes.outputs.changes == 'true'
+        run: |
+          git config user.name "Tamburello360 Bot"
+          git config user.email "bot@tamburello360.pages.dev"
+          git add content/risultati/ content/classifiche/
+          git commit -m "🤖 Aggiornamento automatico risultati e classifiche $(date +'%d/%m/%Y')"
+          git push
+
+      - name: Nessuna novità
+        if: steps.check_changes.outputs.changes != 'true'
+        run: echo "✅ Nessun nuovo risultato trovato, nessun commit necessario."
