@@ -3,33 +3,95 @@ layout: base.njk
 title: Blog
 ---
 
-<section style="padding-top: 3rem;">
+<div class="page-header">
+    <h1>Blog</h1>
+    <p>Articoli, analisi e aggiornamenti sul mondo del tamburello</p>
+</div>
+
+<section class="section">
     <div class="container">
-        <h1 class="section-title">Tutti gli Articoli</h1>
-        
-        <div class="articles-grid">
-            {% for post in collections.blog %}
-            <a href="{{ post.url }}" class="article-card">
-                {% if post.data.image %}
-                <img src="{{ post.data.image }}" alt="{{ post.data.title }}" class="article-image">
-                {% else %}
-                <img src="/public/images/placeholder.jpg" alt="{{ post.data.title }}" class="article-image">
-                {% endif %}
-                <div class="article-content">
+
+        <!-- Filtri categorie -->
+        {%- set categories = [] -%}
+        {%- for post in collections.blog -%}
+            {%- if post.data.category and post.data.category not in categories -%}
+                {%- set categories = (categories.push(post.data.category), categories) -%}
+            {%- endif -%}
+        {%- endfor -%}
+
+        {%- if categories.length > 0 -%}
+        <div class="blog-filters" id="blogFilters">
+            <button class="filter-btn active" data-filter="tutti">Tutti</button>
+            {%- for cat in categories -%}
+            <button class="filter-btn" data-filter="{{ cat }}">{{ cat }}</button>
+            {%- endfor -%}
+        </div>
+        {%- endif -%}
+
+        <!-- Griglia articoli -->
+        <div class="articles-grid" id="articlesGrid">
+            {%- for post in collections.blog -%}
+            <a href="{{ post.url }}" class="article-card" data-category="{{ post.data.category }}">
+                <div class="article-image-wrap">
+                    {%- if post.data.image -%}
+                    <img src="{{ post.data.image }}" alt="{{ post.data.title }}" class="article-image" loading="lazy">
+                    {%- else -%}
+                    <div style="width:100%;height:100%;background:var(--gray-100);display:flex;align-items:center;justify-content:center;font-size:3rem;">🏓</div>
+                    {%- endif -%}
+                    <span class="article-category-badge">{{ post.data.category }}</span>
+                </div>
+                <div class="article-body">
                     <div class="article-meta">
-                        <span class="article-category">{{ post.data.category }}</span>
                         <span>{{ post.data.date | shortDate }}</span>
-                        {% if post.data.reading_time %}
-                        <span>⏱️ {{ post.data.reading_time }} min</span>
-                        {% endif %}
+                        {%- if post.data.reading_time -%}
+                        <span class="article-meta-dot">·</span>
+                        <span>⏱ {{ post.data.reading_time }} min</span>
+                        {%- endif -%}
+                        {%- if post.data.author -%}
+                        <span class="article-meta-dot">·</span>
+                        <span>{{ post.data.author }}</span>
+                        {%- endif -%}
                     </div>
                     <h3 class="article-title">{{ post.data.title }}</h3>
                     <p class="article-excerpt">{{ post.data.excerpt or post.templateContent | striptags | truncate(150) }}</p>
                 </div>
             </a>
-            {% else %}
-            <div class="loading">Nessun articolo ancora. Aggiungili dal pannello admin su /admin!</div>
-            {% endfor %}
+            {%- else -%}
+            <div class="empty-state"><p>Nessun articolo ancora. Aggiungili dal pannello admin!</p></div>
+            {%- endfor -%}
         </div>
+
+        <!-- Messaggio nessun risultato filtro -->
+        <div id="noResults" style="display:none;" class="empty-state mt-2">
+            <p>Nessun articolo in questa categoria.</p>
+        </div>
+
     </div>
 </section>
+
+<script>
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    const cards = document.querySelectorAll('.article-card');
+    const noResults = document.getElementById('noResults');
+
+    filterBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const filter = btn.dataset.filter;
+
+            // Aggiorna bottoni attivi
+            filterBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            // Filtra cards
+            let visible = 0;
+            cards.forEach(card => {
+                const cat = card.dataset.category;
+                const show = filter === 'tutti' || cat === filter;
+                card.style.display = show ? '' : 'none';
+                if (show) visible++;
+            });
+
+            noResults.style.display = visible === 0 ? 'block' : 'none';
+        });
+    });
+</script>

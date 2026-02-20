@@ -3,76 +3,82 @@ layout: base.njk
 title: Risultati
 ---
 
-<section style="padding-top: 3rem;">
+<div class="page-header">
+    <h1>Risultati</h1>
+    <p>Tutti i risultati delle partite di tamburello</p>
+</div>
+
+<section class="section">
     <div class="container">
-        <h1 class="section-title">Ultimi Risultati</h1>
-        <div class="risultati-grid">
-            {% for match in collections.risultati %}
-            <div class="risultato-card">
-                <div class="risultato-header">{{ match.data.serie }} • {{ match.data.date | shortDate }}</div>
-                <div class="match-teams">
-                    <span class="team">{{ match.data.home_team }}</span>
-                    <span class="score">{{ match.data.home_score }} - {{ match.data.away_score }}</span>
-                    <span class="team">{{ match.data.away_team }}</span>
-                </div>
-                {% if match.data.notes %}
-                <p style="margin-top: 0.5rem; font-size: 0.9rem; color: #666; font-style: italic;">
-                    {{ match.data.notes }}
-                </p>
-                {% endif %}
-            </div>
-            {% else %}
-            <div class="loading">Nessun risultato ancora. Aggiungili dal pannello admin!</div>
-            {% endfor %}
+
+        <!-- Filtro per serie -->
+        {%- set series = [] -%}
+        {%- for match in collections.risultati -%}
+            {%- if match.data.serie and match.data.serie not in series -%}
+                {%- set series = (series.push(match.data.serie), series) -%}
+            {%- endif -%}
+        {%- endfor -%}
+
+        {%- if series.length > 1 -%}
+        <div class="filter-bar" id="filterBar">
+            <button class="filter-btn active" data-filter="tutti">Tutti</button>
+            {%- for s in series -%}
+            <button class="filter-btn" data-filter="{{ s }}">{{ s }}</button>
+            {%- endfor -%}
         </div>
+        {%- endif -%}
+
+        <div class="risultati-grid" id="risultatiGrid">
+            {%- for match in collections.risultati -%}
+            <div class="risultato-card" data-serie="{{ match.data.serie }}">
+                <div class="risultato-header">
+                    <span class="risultato-serie">{{ match.data.serie }}</span>
+                    <span class="risultato-data">{{ match.data.date | shortDate }}</span>
+                </div>
+                <div class="match-display">
+                    <div class="match-team {% if match.data.home_score > match.data.away_score %}winner{% endif %}">
+                        {{ match.data.home_team }}
+                    </div>
+                    <div class="match-score">{{ match.data.home_score }} — {{ match.data.away_score }}</div>
+                    <div class="match-team {% if match.data.away_score > match.data.home_score %}winner{% endif %}">
+                        {{ match.data.away_team }}
+                    </div>
+                </div>
+                {%- if match.data.notes -%}
+                <p class="match-notes">{{ match.data.notes }}</p>
+                {%- endif -%}
+            </div>
+            {%- else -%}
+            <div class="empty-state"><p>Nessun risultato ancora. Aggiungili dal pannello admin!</p></div>
+            {%- endfor -%}
+        </div>
+
+        <div id="noResults" style="display:none;" class="empty-state mt-2">
+            <p>Nessun risultato per questa serie.</p>
+        </div>
+
     </div>
 </section>
 
-<style>
-.risultati-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-    gap: 1.5rem;
-}
+<script>
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    const cards = document.querySelectorAll('.risultato-card');
+    const noResults = document.getElementById('noResults');
 
-.risultato-card {
-    background: white;
-    border-radius: 15px;
-    padding: 1.5rem;
-    box-shadow: 0 5px 20px rgba(0,0,0,0.06);
-    transition: all 0.3s ease;
-    border-left: 4px solid var(--accent);
-}
+    filterBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const filter = btn.dataset.filter;
+            filterBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
 
-.risultato-card:hover {
-    transform: translateX(5px);
-    box-shadow: 0 8px 30px rgba(0,0,0,0.1);
-}
+            let visible = 0;
+            cards.forEach(card => {
+                const show = filter === 'tutti' || card.dataset.serie === filter;
+                card.style.display = show ? '' : 'none';
+                if (show) visible++;
+            });
 
-.risultato-header {
-    font-size: 0.85rem;
-    color: #666;
-    margin-bottom: 1rem;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-}
-
-.match-teams {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.team {
-    font-weight: 600;
-    font-size: 1.1rem;
-    color: var(--secondary);
-}
-
-.score {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 2rem;
-    color: var(--primary);
-    padding: 0 1rem;
-}
-</style>
+            noResults.style.display = visible === 0 ? 'block' : 'none';
+        });
+    });
+</script>

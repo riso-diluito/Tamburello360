@@ -4,19 +4,42 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% if title %}{{ title }} - {% endif %}Tamburello360</title>
-    <link rel="icon" type="image/png" href="https://tamburello360.altervista.org/wp-content/uploads/2025/11/cropped-cropped-cropped-cropped-cropped-360.png">
+    <link rel="icon" href="/public/images/logo.png" type="image/png">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;600;700&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/public/css/style.css">
-    <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
 </head>
 <body>
     <header>
-        <nav>
+        <nav class="nav-container">
             <a href="/" class="logo-link">
-                <img src="https://tamburello360.altervista.org/wp-content/uploads/2025/11/cropped-cropped-cropped-cropped-cropped-360.png" alt="Tamburello360" class="logo-img">
+                <img src="/public/images/logo.png" alt="Tamburello360" class="logo-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+                <span class="logo-text" style="display:none">T<span>360</span></span>
             </a>
-            <ul class="nav-menu">
+
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="/" class="nav-link">Home</a></li>
+                <li><a href="/blog/" class="nav-link">Blog</a></li>
+                <li><a href="/classifiche/" class="nav-link">Classifiche</a></li>
+                <li><a href="/risultati/" class="nav-link">Risultati</a></li>
+                <li><a href="/squadre/" class="nav-link">Squadre</a></li>
+                <li><a href="/mappa/" class="nav-link">Mappa</a></li>
+            </ul>
+
+            <div class="nav-right">
+                <a href="/public/admin/" class="admin-btn">Admin</a>
+                <button class="hamburger" id="hamburger" aria-label="Apri menu" aria-expanded="false">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+        </nav>
+
+        <!-- Mobile menu overlay -->
+        <div class="mobile-overlay" id="mobileOverlay"></div>
+        <div class="mobile-menu" id="mobileMenu">
+            <ul>
                 <li><a href="/">Home</a></li>
                 <li><a href="/blog/">Blog</a></li>
                 <li><a href="/classifiche/">Classifiche</a></li>
@@ -24,60 +47,80 @@
                 <li><a href="/squadre/">Squadre</a></li>
                 <li><a href="/mappa/">Mappa</a></li>
             </ul>
-            <button class="admin-btn" onclick="window.location.href='/public/admin/'">Admin</button>
-        </nav>
+            <a href="/public/admin/" class="mobile-admin-btn">Pannello Admin →</a>
+        </div>
     </header>
 
-    {{ content | safe }}
+    <main>
+        {{ content | safe }}
+    </main>
 
     <footer>
-        <div class="container">
-            <div class="footer-content">
+        <div class="footer-inner">
+            <div class="footer-brand">
+                <span class="footer-logo">Tamburello<sup>360</sup></span>
+                <p>Il primo sito in Italia dedicato al tamburello</p>
+            </div>
+            <div class="footer-links">
                 <div class="footer-col">
-                    <h3>Tamburello360</h3>
-                    <p>Il primo sito in Italia dedicato al tamburello</p>
-                </div>
-                <div class="footer-col">
-                    <h4>Link Rapidi</h4>
+                    <h4>Sezioni</h4>
                     <ul>
                         <li><a href="/blog/">Blog</a></li>
                         <li><a href="/classifiche/">Classifiche</a></li>
                         <li><a href="/risultati/">Risultati</a></li>
+                        <li><a href="/squadre/">Squadre</a></li>
+                        <li><a href="/mappa/">Mappa</a></li>
                     </ul>
                 </div>
                 <div class="footer-col">
-                    <h4>Informazioni</h4>
+                    <h4>Admin</h4>
                     <ul>
-                        <li><a href="/chi-siamo/">Chi Siamo</a></li>
-                        <li><a href="/contatti/">Contatti</a></li>
+                        <li><a href="/public/admin/">Pannello CMS</a></li>
                     </ul>
                 </div>
             </div>
-            <div class="footer-bottom">
-                <p>&copy; 2026 Tamburello360. Tutti i diritti riservati.</p>
-            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 Tamburello360. Tutti i diritti riservati.</p>
         </div>
     </footer>
 
     <script>
-        // Netlify Identity Widget
-        if (window.netlifyIdentity) {
-            window.netlifyIdentity.on("init", user => {
-                if (!user) {
-                    window.netlifyIdentity.on("login", () => {
-                        document.location.href = "/admin/";
-                    });
-                }
-            });
+        // Mobile menu
+        const hamburger = document.getElementById('hamburger');
+        const mobileMenu = document.getElementById('mobileMenu');
+        const mobileOverlay = document.getElementById('mobileOverlay');
+
+        function toggleMenu(open) {
+            hamburger.classList.toggle('active', open);
+            mobileMenu.classList.toggle('active', open);
+            mobileOverlay.classList.toggle('active', open);
+            hamburger.setAttribute('aria-expanded', open);
+            document.body.style.overflow = open ? 'hidden' : '';
         }
+
+        hamburger.addEventListener('click', () => {
+            const isOpen = mobileMenu.classList.contains('active');
+            toggleMenu(!isOpen);
+        });
+
+        mobileOverlay.addEventListener('click', () => toggleMenu(false));
+
+        mobileMenu.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => toggleMenu(false));
+        });
 
         // Header shrink on scroll
         window.addEventListener('scroll', function() {
-            const header = document.querySelector('header');
-            if (window.scrollY > 100) {
-                header.classList.add('scrolled');
-            } else {
-                header.classList.remove('scrolled');
+            document.querySelector('header').classList.toggle('scrolled', window.scrollY > 80);
+        });
+
+        // Highlight active nav link
+        const currentPath = window.location.pathname;
+        document.querySelectorAll('.nav-link').forEach(link => {
+            const href = link.getAttribute('href');
+            if (href === '/' ? currentPath === '/' : currentPath.startsWith(href)) {
+                link.classList.add('active');
             }
         });
     </script>

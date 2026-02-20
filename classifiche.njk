@@ -3,114 +3,107 @@ layout: base.njk
 title: Classifiche
 ---
 
-<section style="padding-top: 3rem;">
+<div class="page-header">
+    <h1>Classifiche</h1>
+    <p>Classifiche aggiornate del campionato 2026</p>
+</div>
+
+<section class="section">
     <div class="container">
-        <h1 class="section-title">Classifiche Campionato 2026</h1>
-        <div class="classifiche-container">
-            {% for classifica in collections.classifiche %}
-            <div class="classifica-card">
-                <h3>{{ classifica.data.serie }} {{ classifica.data.year }}</h3>
-                {% if classifica.data.updated %}
-                <p style="text-align: center; color: #666; font-size: 0.9rem; margin-bottom: 1rem;">
-                    Aggiornata al {{ classifica.data.updated | shortDate }}
-                </p>
-                {% endif %}
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Pos</th>
-                            <th>Squadra</th>
-                            <th>Punti</th>
-                            <th>V</th>
-                            <th>P</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for team in classifica.data.teams %}
-                        <tr>
-                            <td class="posizione {% if team.position == 1 %}podio-1{% elif team.position == 2 %}podio-2{% elif team.position == 3 %}podio-3{% endif %}">
-                                {{ team.position }}
-                            </td>
-                            <td class="team">{{ team.name }}</td>
-                            <td><strong>{{ team.points }}</strong></td>
-                            <td>{{ team.wins }}</td>
-                            <td>{{ team.losses }}</td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
+        <div class="classifiche-grid">
+            {%- for classifica in collections.classifiche -%}
+            <div class="classifica-accordion" id="accordion-{{ loop.index }}">
+
+                <!-- Trigger accordion -->
+                <button class="accordion-trigger" onclick="toggleAccordion('accordion-{{ loop.index }}')" aria-expanded="false">
+                    <div class="accordion-trigger-left">
+                        <span class="accordion-serie">{{ classifica.data.serie }} {{ classifica.data.year }}</span>
+                        {%- if classifica.data.updated -%}
+                        <span class="accordion-meta">Aggiornata al {{ classifica.data.updated | shortDate }}</span>
+                        {%- endif -%}
+                    </div>
+                    <span class="accordion-arrow" aria-hidden="true">
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                            <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </span>
+                </button>
+
+                <!-- Podio (top 3 sempre visibile) -->
+                {%- if classifica.data.teams.length > 0 -%}
+                <div class="podio-preview">
+                    {%- for team in classifica.data.teams | limit(3) -%}
+                    <div class="podio-row">
+                        <span class="podio-pos p{{ loop.index }}">{{ loop.index }}</span>
+                        <span class="podio-name">{{ team.name }}</span>
+                        <span class="podio-pts">{{ team.points }} pt</span>
+                    </div>
+                    {%- endfor -%}
+                </div>
+                {%- endif -%}
+
+                <!-- Classifica completa (accordion) -->
+                <div class="accordion-body">
+                    {%- if classifica.data.teams.length > 0 -%}
+                    <table class="classifica-table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Squadra</th>
+                                <th>Pt</th>
+                                <th>V</th>
+                                <th>P</th>
+                                <th>S</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {%- for team in classifica.data.teams -%}
+                            <tr>
+                                <td class="td-pos {% if team.position == 1 %}p1{% elif team.position == 2 %}p2{% elif team.position == 3 %}p3{% endif %}">
+                                    {{ team.position }}
+                                </td>
+                                <td class="td-team">{{ team.name }}</td>
+                                <td class="td-pts">{{ team.points }}</td>
+                                <td class="td-num">{{ team.wins }}</td>
+                                <td class="td-num">{{ team.draws }}</td>
+                                <td class="td-num">{{ team.losses }}</td>
+                            </tr>
+                            {%- endfor -%}
+                        </tbody>
+                    </table>
+                    {%- else -%}
+                    <div style="padding:2rem;text-align:center;color:var(--gray-400);font-family:var(--font-condensed);">
+                        Nessuna squadra inserita.
+                    </div>
+                    {%- endif -%}
+                </div>
+
             </div>
-            {% else %}
-            <div class="loading">Nessuna classifica ancora. Aggiungile dal pannello admin!</div>
-            {% endfor %}
+            {%- else -%}
+            <div class="empty-state">
+                <p>Nessuna classifica ancora. Aggiungile dal pannello admin!</p>
+            </div>
+            {%- endfor -%}
         </div>
     </div>
 </section>
 
-<style>
-.classifiche-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-    gap: 2rem;
-}
+<script>
+    function toggleAccordion(id) {
+        const accordion = document.getElementById(id);
+        const isOpen = accordion.classList.contains('open');
+        const trigger = accordion.querySelector('.accordion-trigger');
 
-.classifica-card {
-    background: white;
-    border-radius: 20px;
-    padding: 2rem;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.08);
-    transition: all 0.3s ease;
-    border-top: 4px solid var(--primary);
-}
+        // Chiudi tutti
+        document.querySelectorAll('.classifica-accordion.open').forEach(el => {
+            el.classList.remove('open');
+            el.querySelector('.accordion-trigger').setAttribute('aria-expanded', 'false');
+        });
 
-.classifica-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 15px 50px rgba(0,0,0,0.12);
-}
-
-.classifica-card h3 {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 1.8rem;
-    color: var(--secondary);
-    margin-bottom: 1.5rem;
-    letter-spacing: 1px;
-    text-align: center;
-}
-
-table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-thead {
-    background: linear-gradient(135deg, var(--secondary) 0%, var(--primary) 100%);
-    color: white;
-}
-
-th {
-    padding: 1rem;
-    text-align: left;
-    font-weight: 600;
-    font-size: 0.9rem;
-    letter-spacing: 0.5px;
-}
-
-td {
-    padding: 1rem;
-    border-bottom: 1px solid #f0f0f0;
-}
-
-tr:hover {
-    background: #f8f9fa;
-}
-
-.posizione {
-    font-weight: 700;
-    color: var(--primary);
-    font-size: 1.2rem;
-}
-
-.podio-1 { color: #FFD700; }
-.podio-2 { color: #C0C0C0; }
-.podio-3 { color: #CD7F32; }
-</style>
+        // Apri quello cliccato (se era chiuso)
+        if (!isOpen) {
+            accordion.classList.add('open');
+            trigger.setAttribute('aria-expanded', 'true');
+        }
+    }
+</script>

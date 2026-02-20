@@ -3,80 +3,147 @@ layout: base.njk
 title: Il primo sito in Italia che parla di tamburello
 ---
 
-<div class="hero" style="background: linear-gradient(135deg, rgba(214, 40, 40, 0.7) 0%, rgba(157, 2, 8, 0.7) 50%, rgba(0, 48, 73, 0.7) 100%), url('https://tamburello360.altervista.org/wp-content/uploads/2025/12/cropped-bk4i8443_20251010_1268349492.jpg') center/cover;">
-    <div class="hero-content">
-        <h1>Tamburello<sup class="hero-sup">360</sup></h1>
-        <p>Il primo sito in Italia che parla di tamburello</p>
-        <div class="hero-buttons">
-            <a href="/blog/" class="cta-button primary">Leggi il Blog</a>
-            <a href="/classifiche/" class="cta-button secondary">Vedi Classifiche</a>
+<section class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-overlay"></div>
+    <div class="hero-content container">
+        <span class="hero-eyebrow">🏆 Il tamburello italiano</span>
+        <h1>Tamburello<span>360</span></h1>
+        <p class="hero-subtitle">Il primo sito in Italia interamente dedicato al tamburello. Risultati, classifiche, squadre e molto altro.</p>
+        <div class="hero-actions">
+            <a href="/blog/" class="btn btn-primary">Leggi il Blog</a>
+            <a href="/classifiche/" class="btn btn-secondary">Vedi Classifiche</a>
+        </div>
+    </div>
+
+    {%- if collections.classifiche.length > 0 -%}
+    {%- set primaClassifica = collections.classifiche[0] -%}
+    {%- if primaClassifica.data.teams.length > 0 -%}
+    <div class="hero-classifica">
+        <div class="hero-classifica-title">📊 {{ primaClassifica.data.serie }} {{ primaClassifica.data.year }}</div>
+        <div class="mini-podio">
+            {%- for team in primaClassifica.data.teams | limit(3) -%}
+            <div class="mini-row">
+                <span class="mini-pos p{{ loop.index }}">{{ loop.index }}</span>
+                <span class="mini-name">{{ team.name }}</span>
+                <span class="mini-pts">{{ team.points }} pt</span>
+            </div>
+            {%- endfor -%}
+        </div>
+        <a href="/classifiche/" class="hero-classifica-link">Classifica completa →</a>
+    </div>
+    {%- endif -%}
+    {%- endif -%}
+</section>
+
+<!-- Ultimi articoli -->
+<section class="section section-light">
+    <div class="container">
+        <div class="section-header">
+            <div>
+                <span class="section-label">Dal Blog</span>
+                <h2 class="section-title">Ultimi Articoli</h2>
+            </div>
+            <a href="/blog/" class="view-all">Tutti gli articoli →</a>
+        </div>
+        <div class="articles-grid">
+            {%- for post in collections.blog | limit(3) -%}
+            <a href="{{ post.url }}" class="article-card">
+                <div class="article-image-wrap">
+                    {%- if post.data.image -%}
+                    <img src="{{ post.data.image }}" alt="{{ post.data.title }}" class="article-image" loading="lazy">
+                    {%- else -%}
+                    <div style="width:100%;height:100%;background:var(--gray-100);display:flex;align-items:center;justify-content:center;font-size:3rem;">🏓</div>
+                    {%- endif -%}
+                    <span class="article-category-badge">{{ post.data.category }}</span>
+                </div>
+                <div class="article-body">
+                    <div class="article-meta">
+                        <span>{{ post.data.date | shortDate }}</span>
+                        {%- if post.data.reading_time -%}
+                        <span class="article-meta-dot">·</span>
+                        <span>⏱ {{ post.data.reading_time }} min</span>
+                        {%- endif -%}
+                    </div>
+                    <h3 class="article-title">{{ post.data.title }}</h3>
+                    <p class="article-excerpt">{{ post.data.excerpt or post.templateContent | striptags | truncate(130) }}</p>
+                </div>
+            </a>
+            {%- else -%}
+            <div class="empty-state"><p>Nessun articolo ancora. Aggiungili dal pannello admin!</p></div>
+            {%- endfor -%}
+        </div>
+    </div>
+</section>
+
+<!-- Stats bar -->
+<div class="stats-bar">
+    <div class="container">
+        <div class="stats-inner">
+            <div class="stat-item">
+                <div class="stat-number">{{ collections.squadre.length }}</div>
+                <div class="stat-label">Squadre</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">{{ collections.blog.length }}</div>
+                <div class="stat-label">Articoli</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">{{ collections.risultati.length }}</div>
+                <div class="stat-label">Partite</div>
+            </div>
         </div>
     </div>
 </div>
 
-<section class="featured-section">
+<!-- Ultimo risultato -->
+{%- if collections.risultati.length > 0 -%}
+{%- set lastMatch = collections.risultati[0] -%}
+<section class="section">
     <div class="container">
-        <h2 class="section-title">Ultimi Articoli</h2>
-        <div class="articles-grid">
-            {% for post in collections.blog | reverse | limit(3) %}
-            <a href="{{ post.url }}" class="article-card">
-                {% if post.data.image %}
-                <img src="{{ post.data.image }}" alt="{{ post.data.title }}" class="article-image">
-                {% else %}
-                <img src="/public/images/placeholder.jpg" alt="{{ post.data.title }}" class="article-image">
-                {% endif %}
-                <div class="article-content">
-                    <div class="article-meta">
-                        <span class="article-category">{{ post.data.category }}</span>
-                        <span>{{ post.data.date | shortDate }}</span>
-                        {% if post.data.reading_time %}
-                        <span>⏱️ {{ post.data.reading_time }} min</span>
-                        {% endif %}
-                    </div>
-                    <h3 class="article-title">{{ post.data.title }}</h3>
-                    <p class="article-excerpt">{{ post.data.excerpt or post.templateContent | striptags | truncate(150) }}</p>
+        <div class="section-header">
+            <div>
+                <span class="section-label">Ultimo risultato</span>
+                <h2 class="section-title">Risultati Recenti</h2>
+            </div>
+            <a href="/risultati/" class="view-all">Tutti i risultati →</a>
+        </div>
+        <div class="risultati-grid">
+            {%- for match in collections.risultati | limit(4) -%}
+            <div class="risultato-card">
+                <div class="risultato-header">
+                    <span class="risultato-serie">{{ match.data.serie }}</span>
+                    <span class="risultato-data">{{ match.data.date | shortDate }}</span>
                 </div>
-            </a>
-            {% else %}
-            <div class="loading">Nessun articolo ancora. Aggiungili dal pannello admin!</div>
-            {% endfor %}
-        </div>
-        <div class="text-center">
-            <a href="/blog/" class="view-all-btn">Vedi tutti gli articoli →</a>
-        </div>
-    </div>
-</section>
-
-<section class="stats-section">
-    <div class="container">
-        <div class="stats-grid">
-            <div class="stat-card">
-                <div class="stat-icon">🏆</div>
-                <div class="stat-number">{{ collections.squadre.length }}</div>
-                <div class="stat-label">Squadre Totali</div>
+                <div class="match-display">
+                    <div class="match-team {% if match.data.home_score > match.data.away_score %}winner{% endif %}">{{ match.data.home_team }}</div>
+                    <div class="match-score">{{ match.data.home_score }} — {{ match.data.away_score }}</div>
+                    <div class="match-team {% if match.data.away_score > match.data.home_score %}winner{% endif %}">{{ match.data.away_team }}</div>
+                </div>
+                {%- if match.data.notes -%}
+                <p class="match-notes">{{ match.data.notes }}</p>
+                {%- endif -%}
             </div>
-            <div class="stat-card">
-                <div class="stat-icon">📝</div>
-                <div class="stat-number">{{ collections.blog.length }}</div>
-                <div class="stat-label">Articoli Pubblicati</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-icon">⚡</div>
-                <div class="stat-number">{{ collections.risultati.length }}</div>
-                <div class="stat-label">Partite Registrate</div>
-            </div>
+            {%- endfor -%}
         </div>
     </div>
 </section>
+{%- endif -%}
 
-<section class="quick-links">
+<!-- Esplora -->
+<section class="section section-dark">
     <div class="container">
-        <h2 class="section-title">Esplora</h2>
+        <div class="section-header">
+            <div>
+                <span class="section-label light">Esplora</span>
+                <h2 class="section-title light">Tutto il Tamburello</h2>
+            </div>
+        </div>
         <div class="links-grid">
             <a href="/classifiche/" class="link-card">
                 <div class="link-icon">📊</div>
                 <h3>Classifiche</h3>
-                <p>Consulta le classifiche aggiornate di tutte le serie</p>
+                <p>Classifiche aggiornate di tutte le serie</p>
             </a>
             <a href="/risultati/" class="link-card">
                 <div class="link-icon">🎯</div>
