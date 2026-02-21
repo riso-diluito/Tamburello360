@@ -1,7 +1,7 @@
 ---
 serie: Serie A
 year: 2026
-updated: 2026-02-20T22:35:52.384Z
+updated: 2026-02-21T22:33:19.597Z
 teams:
   - position: 1
     name: valgatara
