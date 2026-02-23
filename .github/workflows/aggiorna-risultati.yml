@@ -7,13 +7,22 @@ on:
   
   # Permette di lanciarlo manualmente dalla tab Actions su GitHub
   workflow_dispatch:
+    inputs:
+      fetch_archivio:
+        description: 'Scarica archivio stagioni passate (solo prima volta)'
+        required: false
+        default: 'false'
+        type: choice
+        options:
+          - 'false'
+          - 'true'
 
 jobs:
   aggiorna:
     runs-on: ubuntu-latest
     
     permissions:
-      contents: write  # necessario per fare commit
+      contents: write
 
     steps:
       - name: Checkout repository
@@ -23,6 +32,10 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '18'
+
+      - name: Scarica archivio stagioni passate
+        if: github.event.inputs.fetch_archivio == 'true'
+        run: node scripts/fetch-archivio.js
 
       - name: Scarica nuovi risultati
         run: node scripts/fetch-risultati.js
@@ -40,7 +53,7 @@ jobs:
         run: |
           git config user.name "Tamburello360 Bot"
           git config user.email "bot@tamburello360.pages.dev"
-          git add content/risultati/ content/classifiche/
+          git add content/risultati/ content/classifiche/ content/archivio/
           git commit -m "🤖 Aggiornamento automatico risultati e classifiche $(date +'%d/%m/%Y')"
           git push
 
