@@ -70,7 +70,7 @@ async function fetchGiornata(tid, round, matchDay) {
 }
 
 // ============================================================
-// PARSING HTML
+// PARSING HTML — formato outdoor
 // ============================================================
 function parsePartite(html, serie, anno) {
   const partite = [];
@@ -102,18 +102,41 @@ function parsePartite(html, serie, anno) {
     const ospite = nomiMatch[1][1].trim();
     if (!casa || !ospite) continue;
 
-    // Punteggi set
-    // Per l'outdoor cerca i set vinti (es. "2" e "0" oppure "2" e "1")
-    const scoreMatch = [...block.matchAll(/class='score'>\s*(\d+)\s*<\/div>/g)];
-    if (scoreMatch.length < 2) continue;
-    const scoreCasa = parseInt(scoreMatch[0][1]);
-    const scoreOspite = parseInt(scoreMatch[1][1]);
+    let scoreCasa, scoreOspite, tiebreak;
 
-    // Valida: uno dei due deve aver vinto (punteggio 2)
-    if (scoreCasa !== 2 && scoreOspite !== 2) continue;
+    // FORMATO VECCHIO: class='score' con set vinti direttamente (es. 0 e 2)
+    const scoreVecchio = [...block.matchAll(/class='score'>(\d+)<\/div>/g)];
+    if (scoreVecchio.length >= 2) {
+      scoreCasa = parseInt(scoreVecchio[0][1]);
+      scoreOspite = parseInt(scoreVecchio[1][1]);
+      tiebreak = (scoreCasa === 2 && scoreOspite === 1) || (scoreCasa === 1 && scoreOspite === 2);
+    } else {
+      // FORMATO NUOVO: score-container con set singoli, chi ha 'winner' vince il set
+      // Ogni score-container è un set, conta i winner per ciascuna squadra
+      const scoreContainers = [...block.matchAll(/<div class="score-container">([\s\S]*?)<\/div>\s*<\/div>/g)];
 
-    // Tie break: risultato è 2-1
-    const tiebreak = (scoreCasa === 2 && scoreOspite === 1) || (scoreCasa === 1 && scoreOspite === 2);
+      if (scoreContainers.length === 0) continue;
+
+      let setCasa = 0;
+      let setOspite = 0;
+
+      for (const container of scoreContainers) {
+        const contenuto = container[1];
+        // I due div set: primo = casa, secondo = ospite
+        const sets = [...contenuto.matchAll(/<div class='set([^']*)'>/g)];
+        if (sets.length < 2) continue;
+        // chi ha 'winner' nella classe vince il set
+        if (sets[0][1].includes('winner')) setCasa++;
+        else if (sets[1][1].includes('winner')) setOspite++;
+      }
+
+      if (setCasa === 0 && setOspite === 0) continue;
+      if (setCasa !== 2 && setOspite !== 2) continue; // partita non conclusa
+
+      scoreCasa = setCasa;
+      scoreOspite = setOspite;
+      tiebreak = scoreContainers.length === 3; // 3 set giocati = tie break
+    }
 
     partite.push({ casa, ospite, scoreCasa, scoreOspite, tiebreak, data: dataPartita, serie });
   }
