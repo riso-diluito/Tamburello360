@@ -13,13 +13,25 @@ const path = require('path');
 // ============================================================
 const CAMPIONATI = [
   {
-    tid: 108,           // ID torneo (dal parametro tid nella richiesta)
-    round: 882,         // ID girone (dal parametro round nella richiesta)
-    serie: 'Serie A1 Indoor Maschile',
-    giornate: 12,       // numero totale di giornate del campionato
+    tid: 114,
+    round: 971,
+    serie: 'Mondiali Indoor - Gruppo A',
+    giornate: 6,
   },
-  // Aggiungi altri campionati qui, esempio:
-  // { tid: 109, round: 883, serie: 'Serie A1 Indoor Femminile', giornate: 10 },
+  {
+    tid: 114,
+    round: 962,
+    serie: 'Mondiali Indoor - Gruppo B',
+    giornate: 6,
+  },
+  {
+    tid: 114,
+    round: 963,
+    serie: 'Mondiali Indoor - Gruppo C',
+    giornate: 10,
+  },
+  // Aggiungi campionati outdoor qui quando inizia la stagione:
+  // { tid: ???, round: ???, serie: 'Serie A Open', giornate: ?? },
 ];
 
 const RISULTATI_DIR = path.join(__dirname, '..', 'content', 'risultati');
