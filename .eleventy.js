@@ -41,6 +41,10 @@ module.exports = function(eleventyConfig) {
     return collectionApi.getFilteredByGlob("content/risultati/*.md").reverse();
   });
 
+  eleventyConfig.addCollection("archivio", function(collectionApi) {
+    return collectionApi.getFilteredByGlob("content/archivio/*.md").reverse();
+  });
+
   eleventyConfig.addCollection("squadre", function(collectionApi) {
     return collectionApi.getFilteredByGlob("content/squadre/*.md");
   });
