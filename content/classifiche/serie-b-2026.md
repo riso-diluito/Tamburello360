@@ -1,7 +1,7 @@
 ---
 serie: Serie B
 year: 2026
-updated: 2026-02-23T19:41:23.629Z
+updated: 2026-02-23T19:43:24.945Z
 teams:
   - position: 1
     name: bdsfb
