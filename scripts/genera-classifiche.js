@@ -3,10 +3,9 @@
  * Legge tutti i risultati in content/risultati/ e rigenera i file
  * di classifica in content/classifiche/ automaticamente.
  * 
- * Regole punti tamburello (Open/Indoor):
- *   Vittoria = 2 punti
- *   Pareggio = 1 punto (se home_score == away_score)
- *   Sconfitta = 0 punti
+ * Sistema punti:
+ *   INDOOR: Vittoria = 2 | Pareggio = 1 | Sconfitta = 0
+ *   OUTDOOR: Vittoria 2-0 = 3/0 | Vittoria 2-1 (tiebreak) = 2/1
  */
 
 const fs = require('fs');
@@ -31,10 +30,13 @@ function parseFrontmatter(content) {
     const key = line.substring(0, colonIdx).trim();
     const value = line.substring(colonIdx + 1).trim();
     
-    // Rimuovi virgolette se presenti
     if ((value.startsWith('"') && value.endsWith('"')) ||
         (value.startsWith("'") && value.endsWith("'"))) {
       data[key] = value.slice(1, -1);
+    } else if (value === 'true') {
+      data[key] = true;
+    } else if (value === 'false') {
+      data[key] = false;
     } else if (!isNaN(value) && value !== '') {
       data[key] = Number(value);
     } else {
@@ -55,7 +57,6 @@ function leggiRisultati() {
     const content = fs.readFileSync(path.join(RISULTATI_DIR, file), 'utf8');
     const data = parseFrontmatter(content);
     
-    // Valida che ci siano i campi necessari
     if (data.home_team && data.away_team && 
         data.home_score !== undefined && data.away_score !== undefined &&
         data.serie) {
@@ -69,41 +70,72 @@ function leggiRisultati() {
 // ============================================================
 // CALCOLO CLASSIFICHE
 // ============================================================
+function assegnaPunti(r, serieTeams) {
+  const casa = r.home_team;
+  const ospite = r.away_team;
+
+  if (!serieTeams[casa]) serieTeams[casa] = { name: casa, points: 0, wins: 0, draws: 0, losses: 0, played: 0 };
+  if (!serieTeams[ospite]) serieTeams[ospite] = { name: ospite, points: 0, wins: 0, draws: 0, losses: 0, played: 0 };
+
+  serieTeams[casa].played++;
+  serieTeams[ospite].played++;
+
+  const isOutdoor = r.tipo === 'outdoor' ||
+    (r.serie && r.serie.toLowerCase().includes('open')) ||
+    (r.serie && r.serie.toLowerCase().includes('serie a open')) ||
+    (r.serie && r.serie.toLowerCase().includes('serie b open'));
+
+  if (isOutdoor) {
+    // Sistema outdoor: set vinti (home_score/away_score = es. 2/0 o 2/1)
+    const casaVince = r.home_score > r.away_score;
+    const tiebreak = r.tiebreak === true || (r.home_score === 2 && r.away_score === 1) || (r.home_score === 1 && r.away_score === 2);
+
+    if (casaVince) {
+      serieTeams[casa].wins++;
+      serieTeams[ospite].losses++;
+      if (tiebreak) {
+        serieTeams[casa].points += 2;
+        serieTeams[ospite].points += 1;
+      } else {
+        serieTeams[casa].points += 3;
+        // ospite: 0
+      }
+    } else {
+      serieTeams[ospite].wins++;
+      serieTeams[casa].losses++;
+      if (tiebreak) {
+        serieTeams[ospite].points += 2;
+        serieTeams[casa].points += 1;
+      } else {
+        serieTeams[ospite].points += 3;
+        // casa: 0
+      }
+    }
+  } else {
+    // Sistema indoor: punteggio diretto (es. 13-4)
+    if (r.home_score > r.away_score) {
+      serieTeams[casa].wins++;
+      serieTeams[casa].points += 2;
+      serieTeams[ospite].losses++;
+    } else if (r.away_score > r.home_score) {
+      serieTeams[ospite].wins++;
+      serieTeams[ospite].points += 2;
+      serieTeams[casa].losses++;
+    } else {
+      serieTeams[casa].draws++;
+      serieTeams[casa].points += 1;
+      serieTeams[ospite].draws++;
+      serieTeams[ospite].points += 1;
+    }
+  }
+}
+
 function calcolaClassifiche(risultati) {
-  // Raggruppa per serie
   const bySerie = {};
   
   for (const r of risultati) {
     if (!bySerie[r.serie]) bySerie[r.serie] = {};
-    
-    const serie = bySerie[r.serie];
-    const casa = r.home_team;
-    const ospite = r.away_team;
-    
-    // Inizializza squadre se non esistono
-    if (!serie[casa]) serie[casa] = { name: casa, points: 0, wins: 0, draws: 0, losses: 0, played: 0 };
-    if (!serie[ospite]) serie[ospite] = { name: ospite, points: 0, wins: 0, draws: 0, losses: 0, played: 0 };
-    
-    serie[casa].played++;
-    serie[ospite].played++;
-    
-    if (r.home_score > r.away_score) {
-      // Vittoria casa
-      serie[casa].wins++;
-      serie[casa].points += 2;
-      serie[ospite].losses++;
-    } else if (r.away_score > r.home_score) {
-      // Vittoria ospite
-      serie[ospite].wins++;
-      serie[ospite].points += 2;
-      serie[casa].losses++;
-    } else {
-      // Pareggio
-      serie[casa].draws++;
-      serie[casa].points += 1;
-      serie[ospite].draws++;
-      serie[ospite].points += 1;
-    }
+    assegnaPunti(r, bySerie[r.serie]);
   }
   
   return bySerie;
@@ -111,11 +143,8 @@ function calcolaClassifiche(risultati) {
 
 function ordinaClassifica(squadre) {
   return Object.values(squadre).sort((a, b) => {
-    // Prima per punti
     if (b.points !== a.points) return b.points - a.points;
-    // Poi per vittorie
     if (b.wins !== a.wins) return b.wins - a.wins;
-    // Poi alfabetico
     return a.name.localeCompare(b.name);
   });
 }
@@ -134,9 +163,6 @@ function slugifySerie(serie) {
 function generaClassificaMd(serieName, squadreOrdinati) {
   const anno = new Date().getFullYear();
   const oggi = new Date().toISOString();
-  
-  // Determina il "tipo" di serie per il campo serie nel frontmatter
-  // es: "Serie A1 Indoor Maschile" → "Serie A1 Indoor Maschile"
   
   let teamsYaml = '';
   squadreOrdinati.forEach((team, idx) => {
