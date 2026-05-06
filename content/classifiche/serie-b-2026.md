@@ -1,4 +1,5 @@
 ---
+permalink: false
 serie: Serie B
 tipo: outdoor
 year: 2026

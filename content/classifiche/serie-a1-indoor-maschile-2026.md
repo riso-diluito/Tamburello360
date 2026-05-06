@@ -1,4 +1,5 @@
 ---
+permalink: false
 serie: Serie A1 Indoor Maschile
 tipo: indoor
 year: 2026

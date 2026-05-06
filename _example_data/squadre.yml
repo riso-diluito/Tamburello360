@@ -1,0 +1,4 @@
+- name: "Bardolino"
+  slug: "bardolino"
+  color_primary: "#E87722"
+  stadium_url: "https://maps.google.com/?q=45.54443027034763,10.728091500944462"

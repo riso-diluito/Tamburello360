@@ -1,0 +1,176 @@
+<section class="section partite-page" data-serie="A">
+    <div class="container">
+        <div class="partite-serie-badge-wrap">
+            <div class="partite-serie-badge">SERIE A</div>
+        </div>
+
+        <div class="partite-round-nav" aria-label="Navigazione giornate">
+            <button class="partite-round-arrow" id="partitePrevRound" type="button" aria-label="Giornata precedente">
+                <span aria-hidden="true">&lt;</span>
+            </button>
+            <div class="partite-round-label" id="partiteRoundLabel">GIORNATA 1</div>
+            <button class="partite-round-arrow" id="partiteNextRound" type="button" aria-label="Giornata successiva">
+                <span aria-hidden="true">&gt;</span>
+            </button>
+        </div>
+
+        <div class="partite-list" id="partiteList">
+            <div class="empty-state">
+                <p>Nessuna partita disponibile.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    window.partiteData = {{ collections.partiteEnriched | dump | safe }};
+
+    (function () {
+        const list = document.getElementById('partiteList');
+        const roundLabel = document.getElementById('partiteRoundLabel');
+        const prevButton = document.getElementById('partitePrevRound');
+        const nextButton = document.getElementById('partiteNextRound');
+        const matches = Array.isArray(window.partiteData) ? window.partiteData : [];
+
+        const state = {
+            giornata: 1
+        };
+
+        function escapeHtml(value) {
+            return String(value || '')
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+
+        function getMaxRound() {
+            if (!matches.length) {
+                return 1;
+            }
+
+            return matches.reduce((maxRound, match) => Math.max(maxRound, Number(match.giornata) || 1), 1);
+        }
+
+        function getCurrentRound() {
+            const playedMatches = matches.filter(match => match.stato === 'giocata');
+            if (!playedMatches.length) {
+                return 1;
+            }
+
+            return playedMatches.reduce((maxRound, match) => Math.max(maxRound, Number(match.giornata) || 1), 1);
+        }
+
+        function updateRoundNav() {
+            const maxRound = getMaxRound();
+            roundLabel.textContent = `GIORNATA ${state.giornata}`;
+            const hasPrev = state.giornata > 1;
+            const hasNext = state.giornata < maxRound;
+
+            prevButton.classList.toggle('is-hidden', !hasPrev);
+            prevButton.disabled = !hasPrev;
+
+            nextButton.classList.toggle('is-hidden', !hasNext);
+            nextButton.disabled = !hasNext;
+        }
+
+        function renderMatchCard(match) {
+            const homeLogo = match.home_team && match.home_team.logo
+                ? `<img class="partita-team-logo" src="${escapeHtml(match.home_team.logo)}" alt="Logo ${escapeHtml(match.home_team.name)}">`
+                : `<span class="partita-team-logo partita-team-logo--placeholder" aria-hidden="true">${escapeHtml(match.home_team.initial || '?')}</span>`;
+
+            const awayLogo = match.away_team && match.away_team.logo
+                ? `<img class="partita-team-logo" src="${escapeHtml(match.away_team.logo)}" alt="Logo ${escapeHtml(match.away_team.name)}">`
+                : `<span class="partita-team-logo partita-team-logo--placeholder" aria-hidden="true">${escapeHtml(match.away_team.initial || '?')}</span>`;
+
+            const centerContent = match.is_played
+                ? `<div class="partita-score">${escapeHtml(match.score_label)}</div>`
+                : `
+                    <div class="partita-date-block">
+                        <span>${escapeHtml(match.date_day_label || 'Data da definire')}</span>
+                        <span>${escapeHtml(match.date_time_label || '--:--')}</span>
+                    </div>
+                `;
+
+            const mapAction = match.map_url
+                ? `<a class="partita-action-link" href="${escapeHtml(match.map_url)}" target="_blank" rel="noreferrer">📍 <span>DOVE</span></a>`
+                : `<span class="partita-action-link is-disabled" aria-disabled="true">📍 <span>DOVE</span></span>`;
+
+            return `
+                <article class="partita-card" style="background:${escapeHtml(match.gradient)}">
+                    <div class="partita-card-main">
+                        <div class="partita-team-wrap partita-team-wrap--home">
+                            ${homeLogo}
+                            <span class="partita-team-name">${escapeHtml(match.home_team.name)}</span>
+                        </div>
+                        <div class="partita-card-center">
+                            ${centerContent}
+                        </div>
+                        <div class="partita-team-wrap partita-team-wrap--away">
+                            <span class="partita-team-name">${escapeHtml(match.away_team.name)}</span>
+                            ${awayLogo}
+                        </div>
+                    </div>
+                    <div class="partita-card-divider" aria-hidden="true"></div>
+                    <div class="partita-card-actions">
+                        <div class="partita-action partita-action--left">
+                            ${mapAction}
+                        </div>
+                        <div class="partita-action partita-action--right">
+                            <a class="partita-action-link" href="${escapeHtml(match.info_url)}">ℹ️ <span>INFO</span></a>
+                        </div>
+                    </div>
+                </article>
+            `;
+        }
+
+        function renderEmptyState() {
+            list.innerHTML = `
+                <div class="empty-state">
+                    <p>Nessuna partita inserita per Serie A alla giornata ${state.giornata}.</p>
+                </div>
+            `;
+        }
+
+        function renderList() {
+            const roundMatches = matches.filter(match => Number(match.giornata) === state.giornata);
+
+            if (!roundMatches.length) {
+                renderEmptyState();
+                return;
+            }
+
+            list.innerHTML = roundMatches.map(renderMatchCard).join('');
+        }
+
+        function render() {
+            const maxRound = getMaxRound();
+            state.giornata = Math.min(Math.max(1, state.giornata), maxRound);
+            updateRoundNav();
+            renderList();
+        }
+
+        prevButton.addEventListener('click', () => {
+            if (state.giornata <= 1) {
+                return;
+            }
+
+            state.giornata -= 1;
+            render();
+        });
+
+        nextButton.addEventListener('click', () => {
+            const maxRound = getMaxRound();
+            if (state.giornata >= maxRound) {
+                return;
+            }
+
+            state.giornata += 1;
+            render();
+        });
+
+        state.giornata = getCurrentRound();
+        render();
+    }());
+</script>

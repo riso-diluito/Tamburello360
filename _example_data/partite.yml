@@ -1,0 +1,9 @@
+- id: "partita-001"
+  serie: "A"
+  giornata: 3
+  squadra_casa: "bardolino"
+  squadra_ospite: "solferino"
+  data: "2026-05-10T15:00:00"
+  stato: "da_giocare"
+  gol_casa: null
+  gol_ospite: null
