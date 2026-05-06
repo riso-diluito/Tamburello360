@@ -160,8 +160,22 @@ function slugifySerie(serie) {
     .replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 }
 
-function generaClassificaMd(serieName, squadreOrdinati) {
-  const anno = new Date().getFullYear();
+function inferTipoDaSerie(serieName) {
+  return /indoor/i.test(serieName) ? 'indoor' : 'outdoor';
+}
+
+function leggiMetadataClassificaEsistente(filepath) {
+  if (!fs.existsSync(filepath)) {
+    return {};
+  }
+
+  const content = fs.readFileSync(filepath, 'utf8');
+  return parseFrontmatter(content);
+}
+
+function generaClassificaMd(serieName, squadreOrdinati, metadata = {}) {
+  const anno = metadata.year || new Date().getFullYear();
+  const tipo = metadata.tipo || inferTipoDaSerie(serieName);
   const oggi = new Date().toISOString();
   
   let teamsYaml = '';
@@ -178,8 +192,9 @@ function generaClassificaMd(serieName, squadreOrdinati) {
 
   return `---
 serie: ${serieName}
+tipo: ${tipo}
 year: ${anno}
-updated: ${oggi}
+${metadata.retrocesse !== undefined ? `retrocesse: ${metadata.retrocesse}\n` : ''}updated: ${oggi}
 teams:
 ${teamsYaml}---
 `;
@@ -190,9 +205,18 @@ function salvaClassifica(serieName, squadreOrdinati) {
     fs.mkdirSync(CLASSIFICHE_DIR, { recursive: true });
   }
 
-  const filename = `${slugifySerie(serieName)}-${new Date().getFullYear()}.md`;
+  const defaultYear = new Date().getFullYear();
+  const defaultFilename = `${slugifySerie(serieName)}-${defaultYear}.md`;
+  const defaultFilepath = path.join(CLASSIFICHE_DIR, defaultFilename);
+  const existingMeta = leggiMetadataClassificaEsistente(defaultFilepath);
+  const year = existingMeta.year || defaultYear;
+  const filename = `${slugifySerie(serieName)}-${year}.md`;
   const filepath = path.join(CLASSIFICHE_DIR, filename);
-  const content = generaClassificaMd(serieName, squadreOrdinati);
+  const content = generaClassificaMd(serieName, squadreOrdinati, {
+    year,
+    tipo: inferTipoDaSerie(serieName),
+    retrocesse: existingMeta.retrocesse
+  });
   
   fs.writeFileSync(filepath, content, 'utf8');
   console.log(`  ✅ Classifica salvata: ${filename} (${squadreOrdinati.length} squadre)`);
