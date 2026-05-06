@@ -7,102 +7,452 @@ title: Classifiche
     <h1>Classifiche</h1>
 </div>
 
-<section class="section">
+<section class="section classifiche-page" data-mode="outdoor">
     <div class="container">
-        <div class="classifiche-grid">
-            {%- for classifica in collections.classifiche -%}
-            <div class="classifica-accordion" id="accordion-{{ loop.index }}">
-
-                <!-- Trigger accordion -->
-                <button class="accordion-trigger" onclick="toggleAccordion('accordion-{{ loop.index }}')" aria-expanded="false">
-                    <div class="accordion-trigger-left">
-                        <span class="accordion-serie">{{ classifica.data.serie }} {{ classifica.data.year }}</span>
-                        {%- if classifica.data.updated -%}
-                        <span class="accordion-meta">Aggiornata al {{ classifica.data.updated | shortDate }}</span>
-                        {%- endif -%}
-                    </div>
-                    <span class="accordion-arrow" aria-hidden="true">
-                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                            <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
-                    </span>
-                </button>
-
-                <!-- Podio (top 3 sempre visibile) -->
-                {%- if classifica.data.teams.length > 0 -%}
-                <div class="podio-preview">
-                    {%- for team in classifica.data.teams | limit(3) -%}
-                    <div class="podio-row">
-                        <span class="podio-pos p{{ loop.index }}">{{ loop.index }}</span>
-                        <span class="podio-name">{{ team.name }}</span>
-                        <span class="podio-pts">{{ team.points }} pt</span>
-                    </div>
-                    {%- endfor -%}
+        <div class="classifiche-controls" aria-label="Controlli classifiche">
+            <div class="classifiche-controls-center">
+                <div class="classifiche-mode-switch" role="tablist" aria-label="Seleziona modalita">
+                    <span class="classifiche-mode-thumb" aria-hidden="true"></span>
+                    <button class="classifiche-mode-btn is-active" type="button" data-mode="outdoor" role="tab" aria-selected="true">
+                        <span>OUTDOOR</span>
+                    </button>
+                    <button class="classifiche-mode-btn" type="button" data-mode="indoor" role="tab" aria-selected="false">
+                        <span>INDOOR</span>
+                    </button>
                 </div>
-                {%- endif -%}
+            </div>
 
-                <!-- Classifica completa (accordion) -->
-                <div class="accordion-body">
-                    {%- if classifica.data.teams.length > 0 -%}
-                    <table class="classifica-table">
-                        <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>Squadra</th>
-                                <th>Pt</th>
-                                <th>V</th>
-                                <th>P</th>
-                                <th>S</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {%- for team in classifica.data.teams -%}
-                            <tr>
-                                <td class="td-pos {% if team.position == 1 %}p1{% elif team.position == 2 %}p2{% elif team.position == 3 %}p3{% endif %}">
-                                    {{ team.position }}
-                                </td>
-                                <td class="td-team">{{ team.name }}</td>
-                                <td class="td-pts">{{ team.points }}</td>
-                                <td class="td-num">{{ team.wins }}</td>
-                                <td class="td-num">{{ team.draws }}</td>
-                                <td class="td-num">{{ team.losses }}</td>
-                            </tr>
-                            {%- endfor -%}
-                        </tbody>
-                    </table>
-                    {%- else -%}
-                    <div style="padding:2rem;text-align:center;color:var(--gray-400);font-family:var(--font-condensed);">
-                        Nessuna squadra inserita.
-                    </div>
-                    {%- endif -%}
+            <div class="classifiche-year-switch" aria-label="Seleziona anno">
+                <div class="classifiche-year-label">Anno</div>
+                <div class="classifiche-year-dropdown">
+                    <button
+                        class="classifiche-year-trigger"
+                        id="classifiche-year-trigger"
+                        type="button"
+                        aria-haspopup="listbox"
+                        aria-expanded="false"
+                    >
+                        <span id="classifiche-year-current"></span>
+                        <span class="classifiche-year-chevron" aria-hidden="true"></span>
+                    </button>
+                    <div class="classifiche-year-menu" id="classifiche-year-menu" role="listbox" aria-label="Anni disponibili"></div>
                 </div>
+            </div>
+        </div>
 
+        <div class="classifiche-board">
+            <div class="classifiche-column classifiche-column--a">
+                <div class="classifiche-column-header">
+                    <span class="classifiche-column-noise" aria-hidden="true"></span>
+                    <span class="classifiche-column-orbit" aria-hidden="true"></span>
+                    <span class="classifiche-column-slash" aria-hidden="true"></span>
+                    <h2>SERIE A</h2>
+                </div>
+                <div class="classifiche-column-body" id="classifiche-serie-a"></div>
             </div>
-            {%- else -%}
-            <div class="empty-state">
-                <p>Nessuna classifica ancora. Aggiungile dal pannello admin!</p>
+
+            <div class="classifiche-column classifiche-column--b">
+                <div class="classifiche-column-header">
+                    <span class="classifiche-column-noise" aria-hidden="true"></span>
+                    <span class="classifiche-column-orbit" aria-hidden="true"></span>
+                    <span class="classifiche-column-slash" aria-hidden="true"></span>
+                    <h2>SERIE B</h2>
+                </div>
+                <div class="classifiche-column-body" id="classifiche-serie-b"></div>
             </div>
-            {%- endfor -%}
         </div>
     </div>
 </section>
 
 <script>
-    function toggleAccordion(id) {
-        const accordion = document.getElementById(id);
-        const isOpen = accordion.classList.contains('open');
-        const trigger = accordion.querySelector('.accordion-trigger');
+    window.classificheData = [
+        {%- for classifica in collections.classifiche -%}
+        {
+            serie: {{ (classifica.data.serie or '') | dump | safe }},
+            tipo: {{ (classifica.data.tipo or 'outdoor') | dump | safe }},
+            year: {{ (classifica.data.year or '') | dump | safe }},
+            retrocesse: {{ classifica.data.retrocesse or 1 }},
+            updated: {{ (classifica.data.updated or '') | dump | safe }},
+            teams: [
+                {%- for team in classifica.data.teams or [] -%}
+                {
+                    position: {{ team.position or loop.index }},
+                    name: {{ (team.name or '') | dump | safe }},
+                    points: {{ team.points or 0 }},
+                    wins: {{ team.wins or 0 }},
+                    draws: {{ team.draws or 0 }},
+                    losses: {{ team.losses or 0 }},
+                    played: {{ team.played or 0 }},
+                    form: {{ (team.form or team.lastFive or team.last_five or team.recent or '') | dump | safe }}
+                }{%- if not loop.last -%},{%- endif -%}
+                {%- endfor -%}
+            ]
+        }{%- if not loop.last -%},{%- endif -%}
+        {%- endfor -%}
+    ];
 
-        // Chiudi tutti
-        document.querySelectorAll('.classifica-accordion.open').forEach(el => {
-            el.classList.remove('open');
-            el.querySelector('.accordion-trigger').setAttribute('aria-expanded', 'false');
+    window.squadreData = [
+        {%- for squadra in collections.squadre -%}
+        {
+            name: {{ (squadra.data.name or '') | dump | safe }},
+            logo: {{ (squadra.data.logo or '') | dump | safe }}
+        }{%- if not loop.last -%},{%- endif -%}
+        {%- endfor -%}
+    ];
+
+    (function () {
+        const root = document.documentElement;
+        const page = document.querySelector('.classifiche-page');
+        const modeSwitch = document.querySelector('.classifiche-mode-switch');
+        const modeThumb = document.querySelector('.classifiche-mode-thumb');
+        const modeButtons = Array.from(document.querySelectorAll('.classifiche-mode-btn'));
+        const yearTrigger = document.getElementById('classifiche-year-trigger');
+        const yearCurrent = document.getElementById('classifiche-year-current');
+        const yearMenu = document.getElementById('classifiche-year-menu');
+        const serieAContainer = document.getElementById('classifiche-serie-a');
+        const serieBContainer = document.getElementById('classifiche-serie-b');
+
+        const state = {
+            mode: 'outdoor',
+            year: null,
+            yearMenuOpen: false
+        };
+
+        const themeMap = {
+            outdoor: {
+                primary: '#D62828',
+                accent: '#9D0208'
+            },
+            indoor: {
+                primary: '#003049',
+                accent: '#0a4a6e'
+            }
+        };
+
+        const data = Array.isArray(window.classificheData) ? window.classificheData : [];
+        const squadre = Array.isArray(window.squadreData) ? window.squadreData : [];
+        const logoLookup = squadre.reduce((acc, squadra) => {
+            const key = normalizeKey(squadra.name);
+            if (key && squadra.logo) {
+                acc[key] = squadra.logo;
+            }
+            return acc;
+        }, {});
+
+        const years = Array.from(
+            new Set(
+                data
+                    .map(item => Number(item.year))
+                    .filter(year => Number.isFinite(year))
+            )
+        ).sort((a, b) => b - a);
+
+        state.year = years[0] || new Date().getFullYear();
+
+        modeButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                state.mode = button.dataset.mode;
+                render();
+            });
         });
 
-        // Apri quello cliccato (se era chiuso)
-        if (!isOpen) {
-            accordion.classList.add('open');
-            trigger.setAttribute('aria-expanded', 'true');
+        if (yearTrigger) {
+            yearTrigger.addEventListener('click', () => {
+                setYearMenuOpen(!state.yearMenuOpen);
+            });
         }
-    }
+
+        function normalizeKey(value) {
+            return String(value || '')
+                .trim()
+                .toLowerCase()
+                .normalize('NFD')
+                .replace(/[\u0300-\u036f]/g, '');
+        }
+
+        function escapeHtml(value) {
+            return String(value || '')
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+
+        function applyTheme() {
+            const theme = themeMap[state.mode] || themeMap.outdoor;
+            root.style.setProperty('--theme-primary', theme.primary);
+            root.style.setProperty('--theme-accent', theme.accent);
+            page.dataset.mode = state.mode;
+
+            modeButtons.forEach(button => {
+                const isActive = button.dataset.mode === state.mode;
+                button.classList.toggle('is-active', isActive);
+                button.setAttribute('aria-selected', String(isActive));
+            });
+
+            updateModeThumb();
+        }
+
+        function updateModeThumb() {
+            if (!modeSwitch || !modeThumb) {
+                return;
+            }
+
+            const activeButton = modeButtons.find(button => button.dataset.mode === state.mode);
+            if (!activeButton) {
+                return;
+            }
+
+            modeThumb.style.width = activeButton.offsetWidth + 'px';
+            modeThumb.style.height = activeButton.offsetHeight + 'px';
+            modeThumb.style.transform = `translate3d(${activeButton.offsetLeft}px, 0, 0)`;
+        }
+
+        function setYearMenuOpen(isOpen) {
+            state.yearMenuOpen = isOpen;
+
+            if (yearTrigger) {
+                yearTrigger.setAttribute('aria-expanded', String(isOpen));
+                yearTrigger.classList.toggle('is-open', isOpen);
+            }
+
+            if (yearMenu) {
+                yearMenu.classList.toggle('is-open', isOpen);
+            }
+        }
+
+        function renderYears() {
+            if (!yearCurrent || !yearMenu) {
+                return;
+            }
+
+            if (!years.length) {
+                yearCurrent.textContent = 'Nessun anno';
+                yearMenu.innerHTML = '<span class="classifiche-year-empty">Nessun anno disponibile</span>';
+                return;
+            }
+
+            yearCurrent.textContent = String(state.year);
+            yearMenu.innerHTML = years.map(year => {
+                const isActive = year === state.year;
+                return `
+                    <button
+                        class="classifiche-year-option${isActive ? ' is-active' : ''}"
+                        type="button"
+                        data-year="${year}"
+                        role="option"
+                        aria-selected="${isActive}"
+                    >
+                        ${year}
+                    </button>
+                `;
+            }).join('');
+
+            yearMenu.querySelectorAll('.classifiche-year-option').forEach(button => {
+                button.addEventListener('click', () => {
+                    const nextYear = Number(button.dataset.year);
+                    if (!Number.isFinite(nextYear)) {
+                        return;
+                    }
+
+                    state.year = nextYear;
+                    setYearMenuOpen(false);
+                    render();
+                });
+            });
+        }
+
+        function getBucketLabel(serie) {
+            const normalized = normalizeKey(serie);
+            if (normalized.includes('serie b')) {
+                return 'serie-b';
+            }
+            if (normalized.includes('serie a')) {
+                return 'serie-a';
+            }
+            return null;
+        }
+
+        function getFilteredClassifiche() {
+            return data.filter(item => {
+                const itemYear = Number(item.year);
+                return normalizeKey(item.tipo || 'outdoor') === state.mode && itemYear === state.year;
+            });
+        }
+
+        function groupBySeries(classifiche) {
+            return classifiche.reduce((acc, classifica) => {
+                const bucket = getBucketLabel(classifica.serie);
+                if (!bucket) {
+                    return acc;
+                }
+
+                acc[bucket].push(classifica);
+                return acc;
+            }, {
+                'serie-a': [],
+                'serie-b': []
+            });
+        }
+
+        function normalizeFormEntry(entry) {
+            const value = String(entry || '').trim().toUpperCase();
+            if (value === 'W' || value === 'V') {
+                return 'W';
+            }
+            if (value === 'L' || value === 'S') {
+                return 'L';
+            }
+            if (value === 'D' || value === 'P' || value === 'X' || value === 'N') {
+                return 'D';
+            }
+            return 'N';
+        }
+
+        function buildFallbackForm(team) {
+            const fallback = [];
+            const wins = Number(team.wins) || 0;
+            const draws = Number(team.draws) || 0;
+            const losses = Number(team.losses) || 0;
+
+            for (let i = 0; i < Math.min(wins, 5); i += 1) {
+                fallback.push('W');
+            }
+            for (let i = 0; i < Math.min(draws, 5 - fallback.length); i += 1) {
+                fallback.push('D');
+            }
+            for (let i = 0; i < Math.min(losses, 5 - fallback.length); i += 1) {
+                fallback.push('L');
+            }
+
+            while (fallback.length < 5) {
+                fallback.push('N');
+            }
+
+            return fallback.slice(0, 5);
+        }
+
+        function getTeamForm(team) {
+            if (Array.isArray(team.form) && team.form.length) {
+                return team.form.map(normalizeFormEntry).slice(0, 5);
+            }
+
+            if (typeof team.form === 'string' && team.form.trim()) {
+                const compact = team.form.includes(',')
+                    ? team.form.split(',')
+                    : team.form.trim().split('');
+
+                return compact.map(normalizeFormEntry).slice(0, 5);
+            }
+
+            return buildFallbackForm(team);
+        }
+
+        function renderTeamRow(team, index, totalTeams, retrocesse) {
+            const logo = logoLookup[normalizeKey(team.name)];
+            const isPodio = index < 3;
+            const relegatedSlots = Number.isFinite(Number(retrocesse)) ? Math.max(Number(retrocesse), 0) : 1;
+            const relegationStart = relegatedSlots > 0 ? (totalTeams - relegatedSlots + 1) : totalTeams + 1;
+            const isRelegated = index + 1 >= relegationStart;
+            const initial = escapeHtml((team.name || '?').trim().charAt(0) || '?');
+            const form = getTeamForm(team);
+
+            return `
+                <div class="classifica-row${isRelegated ? ' is-relegated' : ''}">
+                    <div class="classifica-pos${isPodio ? ' is-top-' + (index + 1) : ''}">
+                        ${team.position || index + 1}
+                    </div>
+                    <div class="classifica-team">
+                        ${logo ? `
+                            <img class="classifica-team-logo" src="${escapeHtml(logo)}" alt="Logo ${escapeHtml(team.name)}">
+                        ` : `
+                            <span class="classifica-team-placeholder" aria-hidden="true">${initial}</span>
+                        `}
+                        <span class="classifica-team-name">${escapeHtml(team.name)}</span>
+                    </div>
+                    <div class="classifica-points">${team.points || 0}</div>
+                    <div class="classifica-form" aria-label="Ultime cinque partite">
+                        ${form.map(result => `
+                            <span class="classifica-form-dot is-${result.toLowerCase()}" data-result="${result}"></span>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderClassificaCard(classifica) {
+            const teams = Array.isArray(classifica.teams) ? classifica.teams : [];
+            const retrocesse = Number(classifica.retrocesse);
+
+            if (!teams.length) {
+                return `
+                    <article class="classifica-card">
+                        <div class="classifica-empty">
+                            Nessuna squadra inserita per questa classifica.
+                        </div>
+                    </article>
+                `;
+            }
+
+            return `
+                <article class="classifica-card">
+                    <div class="classifica-card-table" role="table" aria-label="${escapeHtml(classifica.serie)} ${escapeHtml(classifica.year)}">
+                        <div class="classifica-head-row" role="row">
+                            <span>Pos</span>
+                            <span>Squadra</span>
+                            <span>Pt</span>
+                            <span>Ultime 5</span>
+                        </div>
+                        <div class="classifica-body">
+                            ${teams.map((team, index) => renderTeamRow(team, index, teams.length, retrocesse)).join('')}
+                        </div>
+                    </div>
+                </article>
+            `;
+        }
+
+        function renderColumn(container, items, fallbackTitle) {
+            if (!container) {
+                return;
+            }
+
+            if (!items.length) {
+                container.innerHTML = `
+                    <div class="classifica-empty classifica-empty-panel">
+                        Nessuna classifica disponibile per ${fallbackTitle} in modalita ${state.mode.toUpperCase()} nell'anno ${state.year}.
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = items.map(renderClassificaCard).join('');
+        }
+
+        function render() {
+            applyTheme();
+            renderYears();
+
+            const filtered = getFilteredClassifiche();
+            const grouped = groupBySeries(filtered);
+
+            renderColumn(serieAContainer, grouped['serie-a'], 'Serie A');
+            renderColumn(serieBContainer, grouped['serie-b'], 'Serie B');
+        }
+
+        document.addEventListener('click', event => {
+            if (!event.target.closest('.classifiche-year-dropdown')) {
+                setYearMenuOpen(false);
+            }
+        });
+
+        document.addEventListener('keydown', event => {
+            if (event.key === 'Escape') {
+                setYearMenuOpen(false);
+            }
+        });
+
+        window.addEventListener('resize', updateModeThumb);
+        render();
+    }());
 </script>
