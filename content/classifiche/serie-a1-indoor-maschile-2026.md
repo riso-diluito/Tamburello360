@@ -1,6 +1,8 @@
 ---
 serie: Serie A1 Indoor Maschile
+tipo: indoor
 year: 2026
+retrocesse: 1
 updated: 2026-02-23T19:43:24.944Z
 teams:
   - position: 1

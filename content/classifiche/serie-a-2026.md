@@ -1,6 +1,8 @@
 ---
 serie: Serie A
+tipo: outdoor
 year: 2026
+retrocesse: 1
 updated: 2026-02-23T19:43:24.945Z
 teams:
   - position: 1
