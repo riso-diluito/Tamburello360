@@ -2,7 +2,7 @@
 serie: Mondiali Indoor - Gruppo B
 tipo: indoor
 year: 2026
-updated: 2026-05-07T19:18:49.761Z
+updated: 2026-05-07T19:42:31.384Z
 teams:
   - position: 1
     name: BRAZIL

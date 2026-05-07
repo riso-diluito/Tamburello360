@@ -3,7 +3,7 @@ serie: Serie A
 tipo: outdoor
 year: 2026
 retrocesse: 1
-updated: 2026-05-07T19:18:49.762Z
+updated: 2026-05-07T19:42:31.385Z
 teams:
   - position: 1
     name: Italia
