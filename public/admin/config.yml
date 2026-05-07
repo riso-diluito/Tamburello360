@@ -186,7 +186,7 @@ collections:
   label: Squadre Serie A
   folder: content/squadre
   create: true
-  slug: "{{slug}}"
+  slug: "{{name | slug}}"
   fields:
   - label: Permalink
     name: permalink
