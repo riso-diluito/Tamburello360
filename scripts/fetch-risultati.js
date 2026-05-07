@@ -75,39 +75,74 @@ function parsePartite(html, campionato) {
 
     const dateMatch = headerText.match(/(Lun|Mar|Mer|Gio|Ven|Sab|Dom)\s+(\d{1,2})\s+(\w{3})\s+(\d{2}:\d{2})/);
     let dataPartita = new Date().toISOString().split('T')[0];
+    let oraPartita = '00:00';
     if (dateMatch) {
       const mesi = { GEN:0, FEB:1, MAR:2, APR:3, MAG:4, GIU:5, LUG:6, AGO:7, SET:8, OTT:9, NOV:10, DIC:11 };
       const giorno = parseInt(dateMatch[2]);
       const mese = mesi[dateMatch[3].toUpperCase()];
       const anno = new Date().getFullYear();
+      oraPartita = dateMatch[4];
       if (mese !== undefined) {
         dataPartita = `${anno}-${String(mese + 1).padStart(2,'0')}-${String(giorno).padStart(2,'0')}`;
       }
     }
 
-    // Estrai nomi squadre
-    const nomiMatch = [...block.matchAll(/class='participant-name[^']*'>\s*([\s\S]*?)\s*<\/div>/g)];
+    // Estrai nomi squadre — formato outdoor usa participant-name
+    const nomiMatch = [...block.matchAll(/<div class='participant-name[^']*'>\s*([^<]+?)\s*<\/div>/g)];
     if (nomiMatch.length < 2) continue;
     const casa = nomiMatch[0][1].trim();
     const ospite = nomiMatch[1][1].trim();
     if (!casa || !ospite) continue;
 
-    // Estrai punteggi
-    const punteggiMatch = [...block.matchAll(/class='score'>\s*(\d+)\s*<\/div>/g)];
-    if (punteggiMatch.length < 2) continue;
-    const scoreCasa = parseInt(punteggiMatch[0][1]);
-    const scoreOspite = parseInt(punteggiMatch[1][1]);
+    // Controlla se la partita è già giocata (ha score-container con set winner)
+    const scoreContainers = [...block.matchAll(/<div class="score-container">([\s\S]*?)<\/div>\s*<\/div>/g)];
 
-    // Tiebreak: se la somma dei set è 3 (es. 2-1 o 1-2)
-    const tiebreak = (scoreCasa + scoreOspite) === 3;
+    // Partita non ancora giocata — nessun score-container con risultati
+    if (scoreContainers.length === 0) {
+      partite.push({
+        casa,
+        ospite,
+        scoreCasa: null,
+        scoreOspite: null,
+        tiebreak: false,
+        data: dataPartita,
+        ora: oraPartita,
+        giocata: false,
+        serie: campionato.serie,
+        tipo: campionato.tipo,
+      });
+      continue;
+    }
+
+    // Partita giocata — conta i set vinti da ciascuna squadra
+    // Ogni score-container rappresenta un set
+    // Il primo div dentro è la squadra casa, il secondo è la squadra ospite
+    // La classe 'winner' indica chi ha vinto quel set
+    let setCasa = 0;
+    let setOspite = 0;
+
+    for (const container of scoreContainers) {
+      const inner = container[1];
+      const divs = [...inner.matchAll(/<div class='set([^']*)'>/g)];
+      if (divs.length < 2) continue;
+      if (divs[0][1].includes('winner')) setCasa++;
+      else if (divs[1][1].includes('winner')) setOspite++;
+    }
+
+    // Valida: deve esserci un vincitore (2 set)
+    if (setCasa !== 2 && setOspite !== 2) continue;
+
+    const tiebreak = scoreContainers.length === 3; // 3 set = tiebreak 2-1
 
     partite.push({
       casa,
       ospite,
-      scoreCasa,
-      scoreOspite,
+      scoreCasa: setCasa,
+      scoreOspite: setOspite,
       tiebreak,
       data: dataPartita,
+      ora: oraPartita,
+      giocata: true,
       serie: campionato.serie,
       tipo: campionato.tipo,
     });
