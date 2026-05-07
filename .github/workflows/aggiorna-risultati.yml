@@ -33,14 +33,14 @@ jobs:
       - name: Controlla se ci sono modifiche
         id: check_changes
         run: |
-          git diff --quiet && git diff --staged --quiet || echo "changes=true" >> $GITHUB_OUTPUT
+          git add content/risultati/ content/classifiche/
+          git diff --staged --quiet || echo "changes=true" >> $GITHUB_OUTPUT
 
       - name: Commit e push se ci sono novità
         if: steps.check_changes.outputs.changes == 'true'
         run: |
           git config user.name "Tamburello360 Bot"
           git config user.email "bot@tamburello360.pages.dev"
-          git add content/risultati/ content/classifiche/
           git commit -m "🤖 Aggiornamento automatico risultati e classifiche $(date +'%d/%m/%Y')"
           git push
 
