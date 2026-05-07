@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mappa delle Squadre - Tamburello360</title>
+    <link rel="icon" href="/public/images/logo.png" type="image/png">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;600;700&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/public/css/style.css">
+</head>
+<body>
+    <header>
+        <nav class="nav-container">
+            <a href="/" class="logo-link">
+                <img src="/public/images/logo.png" alt="Tamburello360" class="logo-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+                <span class="logo-text" style="display:none">T<span>360</span></span>
+            </a>
+
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="/" class="nav-link">Home</a></li>
+                <li><a href="/blog/" class="nav-link">Blog</a></li>
+                <li><a href="/classifiche/" class="nav-link">Classifiche</a></li>
+                <li><a href="/partite/" class="nav-link">Partite</a></li>
+                <li><a href="/squadre/" class="nav-link">Squadre</a></li>
+                <li><a href="/mappa/" class="nav-link">Mappa</a></li>
+            </ul>
+
+            <div class="nav-right">
+                <button class="hamburger" id="hamburger" aria-label="Apri menu" aria-expanded="false">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+        </nav>
+
+        <!-- Mobile menu overlay -->
+        <div class="mobile-overlay" id="mobileOverlay"></div>
+        <div class="mobile-menu" id="mobileMenu">
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="/blog/">Blog</a></li>
+                <li><a href="/classifiche/">Classifiche</a></li>
+                <li><a href="/partite/">Partite</a></li>
+                <li><a href="/squadre/">Squadre</a></li>
+                <li><a href="/mappa/">Mappa</a></li>
+            </ul>
+            <a href="/public/admin/" class="mobile-admin-btn">Pannello Admin →</a>
+        </div>
+    </header>
+
+    <main>
+        
+<div class="page-header">
+    <h1>Mappa</h1>
+</div>
+
+<section class="section">
+    <div class="container">
+        <div class="mappa-container">
+            <div id="map"></div>
+        </div><div style="margin-top:2rem;">
+            <div style="display:flex;gap:1rem;flex-wrap:wrap;justify-content:center;">
+                <span style="display:flex;align-items:center;gap:0.4rem;font-family:var(--font-condensed);font-size:0.85rem;font-weight:600;color:var(--gray-600);">
+                    <span style="background:#d62828;color:white;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:800;">A</span> Serie A
+                </span>
+            </div>
+        </div></div>
+</section>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+    const map = L.map('map').setView([45.4, 10.4], 8);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© <a href="https://openstreetmap.org">OpenStreetMap</a>',
+        maxZoom: 18
+    }).addTo(map);
+
+    function makeIcon(code, color) {
+        return L.divIcon({
+            className: '',
+            html: `<div style="background:${color};color:white;min-width:42px;height:42px;padding:0 10px;border-radius:999px;display:flex;align-items:center;justify-content:center;font-weight:800;font-family:'Barlow Condensed',sans-serif;font-size:13px;border:3px solid white;box-shadow:0 3px 12px rgba(0,0,0,0.35);">${code}</div>`,
+            iconSize: [42, 42],
+            iconAnchor: [21, 21]
+        });
+    }
+
+    const squadre = [{
+            team_code: "ARC",
+            nome: "Arcene",
+            citta: "Arcene",
+            lat: 45.57751,
+            lng: 9.6223,
+            color: "#1B3F8B",
+            website: "",
+            description: ""
+        },{
+            team_code: "BAR",
+            nome: "Bardolino",
+            citta: "Bardolino",
+            lat: 45.54443027034763,
+            lng: 10.728091500944462,
+            color: "#E87722",
+            website: "",
+            description: ""
+        },{
+            team_code: "CLL",
+            nome: "Castellaro",
+            citta: "Castellaro Lagusello",
+            lat: 45.37542,
+            lng: 10.63575,
+            color: "#7A1E2C",
+            website: "",
+            description: ""
+        },{
+            team_code: "CCP",
+            nome: "Castelli Calepio",
+            citta: "Castelli Calepio",
+            lat: 45.61751,
+            lng: 9.89045,
+            color: "#2784C7",
+            website: "",
+            description: ""
+        },{
+            team_code: "CAV",
+            nome: "Cavrianese",
+            citta: "Cavriana",
+            lat: 45.34683,
+            lng: 10.60632,
+            color: "#C62828",
+            website: "",
+            description: ""
+        },{
+            team_code: "CER",
+            nome: "Ceresara",
+            citta: "Ceresara",
+            lat: 45.26648,
+            lng: 10.56942,
+            color: "#D4A017",
+            website: "",
+            description: ""
+        },{
+            team_code: "DOS",
+            nome: "Dossena",
+            citta: "Dossena",
+            lat: 45.88099,
+            lng: 9.70004,
+            color: "#2E7D32",
+            website: "",
+            description: ""
+        },{
+            team_code: "SEG",
+            nome: "Segno",
+            citta: "Segno",
+            lat: 46.30522,
+            lng: 11.07549,
+            color: "#0E8A5F",
+            website: "",
+            description: ""
+        },{
+            team_code: "SOL",
+            nome: "Solferino",
+            citta: "Solferino",
+            lat: 45.36366,
+            lng: 10.55782,
+            color: "#1F5AA6",
+            website: "",
+            description: ""
+        },{
+            team_code: "VAL",
+            nome: "Valgatara",
+            citta: "Valgatara",
+            lat: 45.53481,
+            lng: 10.94342,
+            color: "#8F2436",
+            website: "",
+            description: ""
+        }];
+
+    squadre.forEach(s => {
+        const marker = L.marker([s.lat, s.lng], { icon: makeIcon(s.team_code, s.color || '#d62828') }).addTo(map);
+
+        let popup = `<div style="font-family:'Barlow',sans-serif;min-width:190px;">
+            <strong style="font-family:'Barlow Condensed',sans-serif;font-size:1.1rem;color:#003049;">${s.nome}</strong>
+            <div style="margin-top:0.35rem;font-size:0.82rem;color:#666;">Codice squadra: <strong>${s.team_code}</strong></div>
+            <div style="margin-top:0.35rem;font-size:0.85rem;color:#666;">
+                📍 ${s.citta}<br>
+                🏆 Serie A
+            </div>`;
+        if (s.description) popup += `<p style="margin-top:0.5rem;font-size:0.82rem;color:#888;">${s.description}</p>`;
+        if (s.website) popup += `<a href="${s.website}" target="_blank" style="display:inline-block;margin-top:0.5rem;color:#f77f00;font-weight:700;font-size:0.85rem;">Sito web →</a>`;
+        popup += `</div>`;
+
+        marker.bindPopup(popup);
+    });
+</script>
+
+    </main>
+
+    <footer>
+        <div class="footer-inner">
+            <div class="footer-brand">
+                <span class="footer-logo">Tamburello<sup>360</sup></span>
+                <p>Il primo sito in Italia dedicato al tamburello</p>
+            </div>
+            <div class="footer-links">
+                <div class="footer-col">
+                    <h4>Sezioni</h4>
+                    <ul>
+                        <li><a href="/blog/">Blog</a></li>
+                        <li><a href="/classifiche/">Classifiche</a></li>
+                        <li><a href="/partite/">Partite</a></li>
+                        <li><a href="/archivio/">Archivio</a></li>
+                        <li><a href="/squadre/">Squadre</a></li>
+                        <li><a href="/mappa/">Mappa</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Admin</h4>
+                    <ul>
+                        <li><a href="/public/admin/">Pannello CMS</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 Tamburello360. Tutti i diritti riservati.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile menu
+        const hamburger = document.getElementById('hamburger');
+        const mobileMenu = document.getElementById('mobileMenu');
+        const mobileOverlay = document.getElementById('mobileOverlay');
+
+        function toggleMenu(open) {
+            hamburger.classList.toggle('active', open);
+            mobileMenu.classList.toggle('active', open);
+            mobileOverlay.classList.toggle('active', open);
+            hamburger.setAttribute('aria-expanded', open);
+            document.body.style.overflow = open ? 'hidden' : '';
+        }
+
+        hamburger.addEventListener('click', () => {
+            const isOpen = mobileMenu.classList.contains('active');
+            toggleMenu(!isOpen);
+        });
+
+        mobileOverlay.addEventListener('click', () => toggleMenu(false));
+
+        mobileMenu.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => toggleMenu(false));
+        });
+
+        // Header shrink on scroll
+        window.addEventListener('scroll', function() {
+            document.querySelector('header').classList.toggle('scrolled', window.scrollY > 80);
+        });
+
+        // Highlight active nav link
+        const currentPath = window.location.pathname;
+        document.querySelectorAll('.nav-link').forEach(link => {
+            const href = link.getAttribute('href');
+            const isPartiteLink = href === '/partite/';
+            const isPartitePath = currentPath.startsWith('/partite/') || currentPath.startsWith('/risultati/');
+            if ((href === '/' ? currentPath === '/' : currentPath.startsWith(href)) || (isPartiteLink && isPartitePath)) {
+                link.classList.add('active');
+            }
+        });
+    </script>
+</body>
+</html>
