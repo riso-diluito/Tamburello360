@@ -15,19 +15,11 @@ const path = require('path');
 const CAMPIONATI = [
   {
     tid: 115,
-    round: null,        // Serie A Open non usa il round
+    round: 946,
     serie: 'Serie A Open',
     tipo: 'outdoor',
     giornate: 18,
   },
-  // Aggiungi altri campionati qui:
-  // {
-  //   tid: ???,
-  //   round: null,
-  //   serie: 'Serie B Open - Girone A',
-  //   tipo: 'outdoor',
-  //   giornate: 18,
-  // },
 ];
 
 const RISULTATI_DIR = path.join(__dirname, '..', 'content', 'risultati');
