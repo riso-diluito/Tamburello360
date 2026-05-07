@@ -170,7 +170,7 @@ async function main() {
       try {
         process.stdout.write(`  Giornata ${g}... `);
         const html = await fetchGiornata(campionato.tid, campionato.round, g);
-        if (g === 1) { console.log('HTML GIORNATA 1:', html.substring(0, 500)); break; }
+        if (g === 1) { console.log('HTML GIORNATA 1:', html.substring(0, 2000)); break; }
 
         if (!html || html.trim() === '') {
           console.log('vuota, stop');
