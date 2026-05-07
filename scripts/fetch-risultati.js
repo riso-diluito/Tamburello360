@@ -67,7 +67,7 @@ async function fetchGiornata(tid, round, matchDay) {
 // ============================================================
 // PARSING HTML — formato outdoor FIPT
 // ============================================================
-function parsePartite(html, campionato) {
+function parsePartite(html, campionato, giornata) {
   const partite = [];
 
   const matchBlocks = html.split('<div class="match-element">').slice(1);
@@ -116,6 +116,7 @@ function parsePartite(html, campionato) {
         data: dataPartita,
         ora: oraPartita,
         giocata: false,
+        giornata: giornata,
         serie: campionato.serie,
         tipo: campionato.tipo,
       });
@@ -148,6 +149,7 @@ function parsePartite(html, campionato) {
       data: dataPartita,
       ora: oraPartita,
       giocata: true,
+      giornata: giornata,
       serie: campionato.serie,
       tipo: campionato.tipo,
     });
@@ -175,6 +177,7 @@ function generaContenuto(p) {
 date: ${p.data}T${p.ora}:00.000+01:00
 serie: ${p.serie}
 tipo: ${p.tipo}
+giornata: ${p.giornata}
 home_team: ${p.casa}
 away_team: ${p.ospite}
 home_score: ${scoreHome}
@@ -194,11 +197,10 @@ function salvaPartita(p) {
   const slug = `${p.data}-${slugify(p.casa)}-vs-${slugify(p.ospite)}`;
   const filepath = path.join(RISULTATI_DIR, `${slug}.md`);
 
-  // Se il file esiste già e la partita è già giocata, non sovrascrivere
   if (fs.existsSync(filepath)) return false;
 
   fs.writeFileSync(filepath, generaContenuto(p), 'utf8');
-  console.log(`  ✅ ${slug} (${p.giocata ? `${p.scoreCasa}-${p.scoreOspite}` : 'da giocare'})`);
+  console.log(`  ✅ ${slug} (giornata ${p.giornata}, ${p.giocata ? `${p.scoreCasa}-${p.scoreOspite}` : 'da giocare'})`);
   return true;
 }
 
@@ -221,7 +223,7 @@ async function main() {
           break;
         }
 
-        const partite = parsePartite(html, campionato);
+        const partite = parsePartite(html, campionato, g);
 
         if (partite.length === 0) {
           console.log('nessuna partita trovata');
