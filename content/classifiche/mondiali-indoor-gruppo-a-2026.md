@@ -2,7 +2,7 @@
 serie: Mondiali Indoor - Gruppo A
 tipo: indoor
 year: 2026
-updated: 2026-05-07T19:42:31.383Z
+updated: 2026-05-07T19:51:14.545Z
 teams:
   - position: 1
     name: CATALOGNE
