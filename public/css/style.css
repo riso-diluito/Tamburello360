@@ -2039,6 +2039,9 @@ footer {
 .partita-card {
     position: relative;
     overflow: hidden;
+    max-width: 750px;
+    width: 100%;
+    margin: 0 auto;
     border-radius: 52px;
     padding: clamp(1rem, 2vw, 1.3rem);
     box-shadow: 0 24px 50px rgba(15, 23, 42, 0.16);
@@ -2164,13 +2167,13 @@ footer {
 }
 
 .partita-action--left {
-    justify-content: flex-start;
+    justify-content: center;
     padding-right: 0.75rem;
     border-right: 1px solid rgba(255,255,255,0.3);
 }
 
 .partita-action--right {
-    justify-content: flex-end;
+    justify-content: center;
     padding-left: 0.75rem;
 }
 
