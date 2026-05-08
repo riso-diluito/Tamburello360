@@ -1,5 +1,6 @@
 ---
-permalink: false
+layout: storia.njk
+permalink: "/squadre/arcene/storia/"
 team_code: ARC
 slug: arcene
 name: Arcene

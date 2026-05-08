@@ -35,6 +35,11 @@ module.exports = function(eleventyConfig) {
     return str.substring(0, length) + '...';
   });
 
+  eleventyConfig.addFilter("findTeam", (teamName, teamDatabase) => {
+    if (!teamDatabase) return null;
+    return teamDatabase.find(t => t.name === teamName);
+  });
+
   // ============================================================
   // COLLECTION BLOG
   // ============================================================

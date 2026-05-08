@@ -1,11 +1,7 @@
 ---
-pagination:
-  data: collections.teamDatabase
-  size: 1
-  alias: team
-permalink: "/squadre/{{ team.slug }}/storia/"
 layout: base.njk
 ---
+{% set team = name | findTeam(collections.teamDatabase) %}
 
 <style>
     .squadra-storia-page { background: var(--gray-50); }
@@ -161,7 +157,7 @@ layout: base.njk
     <div class="container mt-3">
         <div class="post-container" style="padding-top: 0;">
             <h2 class="roster-role-title">La Storia</h2>
-            {{ team.history_content | safe }}
+            {{ content | safe }}
             
             <div class="mt-3">
                 {% for role, players in team.roster | groupby("role") %}
