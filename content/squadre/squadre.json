@@ -1,0 +1,4 @@
+{
+  "layout": "storia.njk",
+  "permalink": "/squadre/{{ slug }}/storia/"
+}
