@@ -1,0 +1,27 @@
+---
+pagination:
+  data: collections.teamDatabase
+  size: 1
+  alias: team
+permalink: "/squadre/{{ team.slug }}/storia/"
+layout: base.njk
+---
+
+<div class="page-header">
+    <h1>Storia di {{ team.name }}</h1>
+</div>
+
+<section class="section">
+    <div class="container">
+        <div class="post-container"> {# Reusing post-container for styling #}
+            <p>Questa è la pagina dedicata alla storia della squadra <strong>{{ team.name }}</strong>.</p>
+            <p>Qui potrai trovare informazioni dettagliate sulla sua fondazione, i successi, i giocatori iconici e gli eventi più importanti che hanno segnato il suo percorso nel tamburello.</p>
+            <p>Contenuto della storia in arrivo...</p>
+            <div class="post-footer">
+                <a href="/squadre/" class="back-btn">
+                    <i class="fas fa-arrow-left"></i> Tutte le Squadre
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
