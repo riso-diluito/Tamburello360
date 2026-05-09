@@ -58,8 +58,10 @@ function leggiRisultati() {
     const data = parseFrontmatter(content);
     
     if (data.home_team && data.away_team && 
-        data.home_score !== undefined && data.away_score !== undefined &&
-        data.serie) {
+    data.home_score !== undefined && data.home_score !== '' &&
+    data.away_score !== undefined && data.away_score !== '' &&
+    data.giocata === true &&
+    data.serie) {
       risultati.push(data);
     }
   }
