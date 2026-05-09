@@ -1689,26 +1689,26 @@ header.scrolled .logo-img {
 
 .team-card-orbit {
     position: absolute;
-    top: 10%;
-    right: 8%;
-    width: 30%;
+    top: 5%;
+    right: 5%;
+    width: 22%;
     aspect-ratio: 1;
     border-radius: 50%;
     border: 1px solid rgba(255,255,255,0.26);
-    box-shadow: 0 0 0 10px rgba(255,255,255,0.05);
+    box-shadow: 0 0 0 8px rgba(255,255,255,0.05);
     pointer-events: none;
 }
 
 .team-card-slash {
     position: absolute;
-    bottom: 30%;
-    right: 15%;
-    width: 25%;
-    height: 8px;
+    bottom: 38%;
+    right: 14%;
+    width: 20%;
+    height: 7px;
     border-radius: 999px;
     background: rgba(255,255,255,0.55);
     transform: rotate(-34deg);
-    box-shadow: 0 12px 0 -2px rgba(255,255,255,0.18);
+    box-shadow: 0 10px 0 -2px rgba(255,255,255,0.18), 18px -20px 0 -1px rgba(255,255,255,0.22);
     pointer-events: none;
 }
 
