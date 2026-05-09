@@ -1731,7 +1731,7 @@ header.scrolled .logo-img {
     left: -15%;
     width: 65%;
     aspect-ratio: 1;
-    border-radius: 70%;
+    border-radius: 90%;
     border: 1px solid rgba(255,255,255,0.16);
     background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0) 68%);
     pointer-events: none;
