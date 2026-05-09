@@ -2,76 +2,76 @@
 serie: Serie A Open
 tipo: outdoor
 year: 2026
-updated: 2026-05-08T22:43:09.388Z
+updated: 2026-05-09T09:34:50.911Z
 teams:
   - position: 1
-    name: Solferino
-    points: 36
-    wins: 12
-    draws: 0
-    losses: 6
-    played: 18
-  - position: 2
-    name: Ceresara
-    points: 33
-    wins: 11
-    draws: 0
-    losses: 7
-    played: 18
-  - position: 3
     name: Dossena
-    points: 33
-    wins: 11
+    points: 18
+    wins: 6
     draws: 0
-    losses: 7
-    played: 18
+    losses: 0
+    played: 6
+  - position: 2
+    name: Solferino
+    points: 18
+    wins: 6
+    draws: 0
+    losses: 0
+    played: 6
+  - position: 3
+    name: Ceresara
+    points: 12
+    wins: 4
+    draws: 0
+    losses: 2
+    played: 6
   - position: 4
-    name: Arcene
-    points: 27
-    wins: 9
-    draws: 0
-    losses: 9
-    played: 18
-  - position: 5
-    name: Bardolino
-    points: 26
-    wins: 9
-    draws: 0
-    losses: 9
-    played: 18
-  - position: 6
     name: Segno
-    points: 26
-    wins: 9
+    points: 11
+    wins: 4
     draws: 0
-    losses: 9
-    played: 18
-  - position: 7
+    losses: 2
+    played: 6
+  - position: 5
+    name: Arcene
+    points: 9
+    wins: 3
+    draws: 0
+    losses: 3
+    played: 6
+  - position: 6
     name: Castellaro
-    points: 25
-    wins: 8
+    points: 7
+    wins: 2
     draws: 0
-    losses: 10
-    played: 18
-  - position: 8
-    name: Castelli Calepio
-    points: 24
-    wins: 8
-    draws: 0
-    losses: 10
-    played: 18
-  - position: 9
+    losses: 4
+    played: 6
+  - position: 7
     name: Cavrianese
-    points: 24
-    wins: 8
+    points: 6
+    wins: 2
     draws: 0
-    losses: 10
-    played: 18
+    losses: 4
+    played: 6
+  - position: 8
+    name: Bardolino
+    points: 5
+    wins: 2
+    draws: 0
+    losses: 4
+    played: 6
+  - position: 9
+    name: Castelli Calepio
+    points: 3
+    wins: 1
+    draws: 0
+    losses: 5
+    played: 6
   - position: 10
     name: Valgatara
-    points: 16
-    wins: 5
+    points: 1
+    wins: 0
     draws: 0
-    losses: 13
-    played: 18
+    losses: 6
+    played: 6
 ---
