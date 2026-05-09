@@ -1767,9 +1767,9 @@ header.scrolled .logo-img {
 
 .team-action-link--pill {
     background: transparent;
-    border: 2px solid rgba(255,255,255,0.7);
+    border: 2.5px solid rgba(255,255,255,0.7);
     border-radius: 999px;
-    font-size: 0.78rem;
+    font-size: 0.80rem;
     padding: 0.45rem 1.1rem;
     letter-spacing: 2px;
     gap: 0.25rem;
