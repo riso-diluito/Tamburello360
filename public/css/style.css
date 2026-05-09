@@ -1765,6 +1765,21 @@ header.scrolled .logo-img {
     transform: translateY(-1px);
 }
 
+.team-action-link--pill {
+    background: rgba(0,0,0,0.35);
+    padding: 0.4rem 1rem;
+    border-radius: 999px;
+    font-size: 0.8rem;
+    letter-spacing: 1.5px;
+    gap: 0.3rem;
+}
+
+.team-action-link--pill:hover {
+    background: rgba(0,0,0,0.55);
+    transform: translateY(-1px);
+    color: white;
+}
+
 /* ============ BLOG PAGE ============ */
 .blog-filters {
     display: flex;

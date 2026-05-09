@@ -35,7 +35,9 @@ title: Squadre
                         <a href="{{ team.history_url }}" class="team-action-link"><i class="fas fa-book"></i> Storia</a>
                     </div>
                     <div class="team-action team-action--right">
-                        <a href="{{ team.map_url }}" target="_blank" rel="noopener" class="team-action-link"><i class="fas fa-map-marker-alt"></i> {{ team.city }}</a>
+                        <a href="{{ team.map_url }}" target="_blank" rel="noopener" class="team-action-link team-action-link--pill">
+                            📍 {{ team.city }}
+                        </a>
                     </div>
                 </div>
             </div>
