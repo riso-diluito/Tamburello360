@@ -36,12 +36,12 @@ title: Mappa delle Squadre
 
     function makeIcon(code, color, logo) {
         const inner = logo
-            ? `<img src="${logo}" style="width:28px;height:28px;border-radius:50%;object-fit:cover;">`
+            ? `<img src="${logo}" style="width:32px;height:32px;border-radius:50%;object-fit:cover;">`
             : `<span style="font-weight:800;font-family:'Barlow Condensed',sans-serif;font-size:13px;">${code}</span>`;
 
         return L.divIcon({
             className: '',
-            html: `<div style="background:${color};width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:3px solid white;box-shadow:0 3px 12px rgba(0,0,0,0.35);">${inner}</div>`,
+            html: `<div style="background:${color};width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:2px solid white;box-shadow:0 3px 12px rgba(0,0,0,0.35);">${inner}</div>`,
             iconSize: [42, 42],
             iconAnchor: [21, 21]
         });
@@ -65,7 +65,7 @@ title: Mappa delle Squadre
 
     squadre.forEach(s => {
         const marker = L.marker([s.lat, s.lng], { icon: makeIcon(s.team_code, s.color || '#d62828', s.logo) }).addTo(map);
-        
+
         let popup = `<div style="font-family:'Barlow',sans-serif;min-width:190px;">
             <strong style="font-family:'Barlow Condensed',sans-serif;font-size:1.1rem;color:#003049;">${s.nome}</strong>
             <div style="margin-top:0.35rem;font-size:0.82rem;color:#666;">Codice squadra: <strong>${s.team_code}</strong></div>
