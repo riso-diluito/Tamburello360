@@ -1312,7 +1312,7 @@ header.scrolled .logo-img {
     font-size: 0.95rem;
     font-weight: 800;
     color: white;
-    background: var(--theme-primary);
+    background: #cf5d24;
     box-shadow: inset 0 1px 0 rgba(255,255,255,0.25);
 }
 
