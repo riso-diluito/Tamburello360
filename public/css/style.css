@@ -1331,6 +1331,11 @@ header.scrolled .logo-img {
     color: white;
 }
 
+.classifica-pos.is-last {
+    background: #D62828;
+    color: white;
+}
+
 .classifica-team {
     min-width: 0;
     display: flex;

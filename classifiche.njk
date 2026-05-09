@@ -246,7 +246,7 @@ title: Classifiche
 
             return `
                 <div class="classifica-row${isRelegated ? ' is-relegated' : ''}">
-                    <div class="classifica-pos${isPodio ? ' is-top-' + (index + 1) : ''}">
+                    <div class="classifica-pos${isPodio ? ' is-top-' + (index + 1) : index === totalTeams - 1 ? ' is-last' : ''}">
                         ${team.position || index + 1}
                     </div>
                     <div class="classifica-team">
