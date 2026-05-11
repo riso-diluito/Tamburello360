@@ -37,7 +37,7 @@
 .hero-magazine {
     position: relative;
     min-height: 80vh;
-    background: url('/public/images/uploads/hero-bg.jpg') center/cover no-repeat;
+    background: url('/images/uploads/hero-bg.jpg') center/cover no-repeat;
     display: flex;
     align-items: center;
     color: white;
