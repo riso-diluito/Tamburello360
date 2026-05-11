@@ -1,4 +1,11 @@
 /* ============================================
+   IMPORT REDESIGN 
+   Includiamo qui le nuove regole per assicurarci 
+   che vengano caricate correttamente.
+   ============================================ */
+@import "redesign.css";
+
+/* ============================================
    TAMBURELLO360 - DESIGN SYSTEM
    Aesthetic: Editorial sport magazine
    Fonts: Bebas Neue (display) + Barlow (body)

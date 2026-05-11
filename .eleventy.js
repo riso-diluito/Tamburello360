@@ -2,7 +2,9 @@ const { buildTeamDatabase, buildTeamLookup } = require('./lib/team-database');
 const { buildEnrichedMatches } = require('./lib/partite');
 
 module.exports = function(eleventyConfig) {
-  eleventyConfig.addPassthroughCopy("public");
+  // Mappa il contenuto di public alla radice del sito finale.
+  // Questo rende i percorsi più semplici: /css/style.css invece di /public/css/style.css
+  eleventyConfig.addPassthroughCopy({ "public": "/" });
 
   // ============================================================
   // FILTRI
