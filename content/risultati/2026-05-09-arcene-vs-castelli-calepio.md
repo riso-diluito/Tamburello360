@@ -5,9 +5,9 @@ tipo: outdoor
 giornata: 7
 home_team: Arcene
 away_team: Castelli Calepio
-home_score: 
-away_score: 
+home_score: 2
+away_score: 0
 tiebreak: false
-giocata: false
+giocata: true
 auto_generated: true
 ---
