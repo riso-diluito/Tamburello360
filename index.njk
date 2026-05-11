@@ -3,17 +3,17 @@ layout: base.njk
 title: Tamburello360 - La Casa Indipendente del Tamburello Italiano
 ---
 
-{# 1. NUOVA HERO STAGE: CINEMATOGRAFICA ED EDITORIALE #}
+{# 1. HERO STAGE: CINEMATOGRAFICA #}
 <section class="hero-stage">
   <div class="hero-bg-container">
     <div class="hero-vignette"></div>
     <img src="/images/uploads/hero-bg.jpg" alt="Tamburello Action" class="hero-img">
   </div>
 
-  <div class="hero-main-content container">
+  <div class="container hero-main-content">
     <div class="hero-branding">
-      <span class="hero-badge">Indipendente dal 2025</span>
-      <h1 class="hero-title">POLVERE. <br><span class="highlight">GLORIA.</span> <br>TAMBURELLO.</h1>
+      <span class="hero-badge">Progetto Indipendente</span>
+      <h1 class="hero-title">POLVERE.<br><span class="highlight">GLORIA.</span><br>TAMBURELLO.</h1>
       <p class="hero-description">L'anima del tamburello italiano raccontata da chi lo vive ogni giorno.</p>
       <div class="hero-cta-group">
         <a href="/partite/" class="btn btn-primary">Match Center</a>
@@ -21,32 +21,27 @@ title: Tamburello360 - La Casa Indipendente del Tamburello Italiano
       </div>
     </div>
 
-    {# Widget Dati Integrato #}
     <div class="hero-sidebar-data">
       {% set nextMatch = collections.partiteEnriched | selectattr("is_recommended", "equalto", true) | first %}
       {% if nextMatch %}
       <div class="hero-featured-match">
-        <span class="live-indicator">Prossimo Match</span>
+        <span class="live-indicator">Match Center</span>
         <div class="match-teams-box">
-          <div class="team">
-            <span class="team-name">{{ nextMatch.home_team.name }}</span>
-          </div>
-          <div class="vs-circle">VS</div>
-          <div class="team">
-            <span class="team-name">{{ nextMatch.away_team.name }}</span>
-          </div>
+          <span>{{ nextMatch.home_team.name }}</span>
+          <small>VS</small>
+          <span>{{ nextMatch.away_team.name }}</span>
         </div>
         <div class="match-footer">
-          <span class="match-date">{{ nextMatch.date_day_label }} • {{ nextMatch.date_time_label }}</span>
+          {{ nextMatch.date_day_label }} ore {{ nextMatch.date_time_label }}
         </div>
       </div>
       {% endif %}
 
       <div class="hero-standings-mini">
-        <h4>Top 3 Serie A</h4>
+        <small>Top 3 Serie A</small>
         {% for team in collections.classificheSerieA[0].data.teams | limit(3) %}
           <div class="standing-row">
-            <span>{{ loop.index }}° {{ team.name }}</span>
+            <span>{{ team.name }}</span>
             <strong>{{ team.points }}</strong>
           </div>
         {% endfor %}
@@ -54,26 +49,36 @@ title: Tamburello360 - La Casa Indipendente del Tamburello Italiano
     </div>
   </div>
 
-  {# Bottom Live Ticker #}
   <div class="hero-live-bar">
     <div class="container">
       <div class="ticker-wrap">
-        <span class="ticker-title">Flash Score</span>
         <div class="ticker-scroll">
           {% for match in collections.partiteRecenti | limit(6) %}
-            <span class="ticker-match"><strong>{{ match.squadra_casa }}</strong> {{ match.gol_casa }}-{{ match.gol_ospite }} <strong>{{ match.squadra_ospite }}</strong></span>
+            <span class="ticker-match">
+              <strong>{{ match.squadra_casa }}</strong> 
+              {{ match.gol_casa }}-{{ match.gol_ospite }} 
+              <strong>{{ match.squadra_ospite }}</strong>
+            </span>
+          {% endfor %}
+          {# Duplicate for infinite loop #}
+          {% for match in collections.partiteRecenti | limit(6) %}
+            <span class="ticker-match">
+              <strong>{{ match.squadra_casa }}</strong> 
+              {{ match.gol_casa }}-{{ match.gol_ospite }} 
+              <strong>{{ match.squadra_ospite }}</strong>
+            </span>
           {% endfor %}
         </div>
       </div>
     </div>
   </div>
-</div>
+</section>
 
 {# 3. MAGAZINE SECTION: LOOK EDITORIALE #}
-<section class="magazine-grid container section-padding">
+<section class="container section-padding">
   <div class="section-header">
     <h2>Storie di <span class="highlight">Campo</span></h2>
-    <a href="/blog/" class="view-all">Leggi tutto il magazine →</a>
+    <a href="/blog/">Tutti gli articoli →</a>
   </div>
 
   <div class="magazine-layout">
