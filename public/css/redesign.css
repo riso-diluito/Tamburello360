@@ -1,0 +1,151 @@
+/* IDENTITÀ VISIVA TAMBURELLO360 */
+:root {
+    --brand-red: #e63946;
+    --brand-dark: #1a1a1a;
+    --brand-gray: #f4f4f4;
+    --terra-rossa: #bc4749;
+    --accent: #ffb703;
+}
+
+/* HERO MAGAZINE */
+.hero-magazine {
+    position: relative;
+    min-height: 80vh;
+    background: url('/public/images/uploads/hero-bg.jpg') center/cover no-repeat;
+    display: flex;
+    align-items: center;
+    color: white;
+    overflow: hidden;
+}
+
+.hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.4) 100%);
+}
+
+.hero-content {
+    position: relative;
+    z-index: 2;
+    display: grid;
+    grid-template-columns: 1.2fr 0.8fr;
+    gap: 4rem;
+    align-items: center;
+}
+
+.hero-text h1 {
+    font-size: clamp(2.5rem, 5vw, 4.5rem);
+    line-height: 1.1;
+    margin-bottom: 1.5rem;
+    text-transform: uppercase;
+    font-weight: 900;
+}
+
+.highlight { color: var(--accent); }
+
+.badge-indipendente {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    background: var(--brand-red);
+    font-weight: bold;
+    font-size: 0.8rem;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+}
+
+/* MAGAZINE GRID */
+.magazine-layout {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+.post-featured {
+    background: white;
+    border-bottom: 5px solid var(--brand-red);
+    transition: transform 0.3s;
+}
+
+.post-featured img {
+    width: 100%;
+    aspect-ratio: 16/9;
+    object-fit: cover;
+}
+
+.post-content { padding: 2rem; }
+
+.post-category {
+    color: var(--brand-red);
+    text-transform: uppercase;
+    font-weight: bold;
+    font-size: 0.85rem;
+}
+
+/* TICKER */
+.results-ticker {
+    background: var(--brand-dark);
+    color: white;
+    padding: 1rem 0;
+    border-top: 2px solid var(--accent);
+}
+
+.flex-ticker {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+}
+
+.ticker-items {
+    display: flex;
+    gap: 3rem;
+    overflow-x: auto;
+    white-space: nowrap;
+    scrollbar-width: none;
+}
+
+/* SPLIT SECTION */
+.split-section {
+    background: #f9f9f9;
+    padding: 5rem 0;
+}
+
+.split-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+}
+
+.mission-box {
+    background: var(--brand-dark);
+    color: white;
+    padding: 3rem;
+    border-radius: 4px;
+    position: relative;
+}
+
+.mission-tag {
+    position: absolute;
+    top: -15px;
+    left: 30px;
+    background: var(--accent);
+    color: var(--brand-dark);
+    padding: 5px 15px;
+    font-weight: bold;
+}
+
+/* MINI TABLE */
+.mini-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.5rem 0;
+}
+
+.mini-table tr { border-bottom: 1px solid #ddd; }
+.mini-table td { padding: 0.8rem 0.5rem; }
+.mini-table .team-name { font-weight: bold; }
+.mini-table .points {
+    text-align: right;
+    color: var(--brand-red);
+    font-weight: 900;
+}

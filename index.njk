@@ -1,123 +1,135 @@
 ---
 layout: base.njk
-title: Il primo sito in Italia che parla di tamburello
+title: Tamburello360 - La Casa Indipendente del Tamburello Italiano
 ---
 
-<section class="hero">
-    <div class="hero-bg"></div>
-    <div class="hero-overlay"></div>
-    <div class="hero-content container">
-        <h1>Tamburello<span>360</span></h1>
-        <p class="hero-subtitle">Il primo sito in Italia interamente dedicato al tamburello</p>
-        <div class="hero-actions">
-            <a href="/blog/" class="btn btn-primary">Leggi il Blog</a>
-            <a href="/classifiche/" class="btn btn-secondary">Vedi Classifiche</a>
-        </div>
+{# 1. HERO SECTION: EMOZIONE E UTILITÀ #}
+<section class="hero-magazine">
+  <div class="hero-overlay"></div>
+  <div class="hero-content container">
+    <div class="hero-text">
+      <span class="badge-indipendente">Progetto Indipendente</span>
+      <h1>Il battito della <span class="highlight">Terra Rossa</span></h1>
+      <p>Non siamo la federazione. Siamo la community. Risultati, storie e passione per lo sport più autentico d'Italia.</p>
+      <div class="hero-actions">
+        <a href="/partite/" class="btn btn-primary">Match Center</a>
+        <a href="#progetto" class="btn btn-outline">Scopri la Mission</a>
+      </div>
     </div>
-
-    {%- if collections.classificheSerieA.length > 0 -%}
-    {%- set primaClassifica = collections.classificheSerieA[0] -%}
-    {%- if primaClassifica.data.teams.length > 0 -%}
-    <div class="hero-classifica">
-        <div class="hero-classifica-title">📊 {{ primaClassifica.data.serie }} {{ primaClassifica.data.year }}</div>
-        <div class="mini-podio">
-            {%- for team in primaClassifica.data.teams | limit(3) -%}
-            <div class="mini-row">
-                <span class="mini-pos p{{ loop.index }}">{{ loop.index }}</span>
-                <span class="mini-name">{{ team.name }}</span>
-                <span class="mini-pts">{{ team.points }} pt</span>
-            </div>
-            {%- endfor -%}
+    
+    {# Mini Widget Prossima Partita #}
+    {% set nextMatch = collections.partiteEnriched | selectattr("is_recommended", "equalto", true) | first %}
+    {% if nextMatch %}
+    <div class="hero-widget">
+      <h3>In Evidenza</h3>
+      <div class="match-mini-card">
+        <div class="match-teams">
+          <span>{{ nextMatch.home_team.name }}</span>
+          <span class="vs">vs</span>
+          <span>{{ nextMatch.away_team.name }}</span>
         </div>
-        <a href="/classifiche/" class="hero-classifica-link">Classifica completa →</a>
+        <div class="match-info">
+          {{ nextMatch.date_day_label }} ore {{ nextMatch.date_time_label }}
+        </div>
+        <a href="{{ nextMatch.info_url }}" class="link-overlay">Info Match</a>
+      </div>
     </div>
-    {%- endif -%}
-    {%- endif -%}
+    {% endif %}
+  </div>
 </section>
 
-<section class="section section-light">
-    <div class="container">
-        <div class="section-header">
-            <div>
-                <span class="section-label">Dal Blog</span>
-                <h2 class="section-title">Ultimi Articoli</h2>
-            </div>
-            <a href="/blog/" class="view-all">Tutti gli articoli →</a>
+{# 2. RISULTATI RECENTI: IL TICKER DINAMICO #}
+<div class="results-ticker">
+  <div class="container flex-ticker">
+    <span class="ticker-label">Ultimi Risultati:</span>
+    <div class="ticker-items">
+      {% for match in collections.partiteRecenti | limit(5) %}
+        <div class="ticker-item">
+          <strong>{{ match.squadra_casa }}</strong> {{ match.gol_casa }} - {{ match.gol_ospite }} <strong>{{ match.squadra_ospite }}</strong>
         </div>
-        <div class="articles-grid">
-            {%- for post in collections.blogVisible | limit(3) -%}
-            <a href="{{ post.url }}" class="article-card">
-                <div class="article-image-wrap">
-                    {%- if post.data.image -%}
-                    <img src="{{ post.data.image }}" alt="{{ post.data.title }}" class="article-image" loading="lazy">
-                    {%- else -%}
-                    <div style="width:100%;height:100%;background:var(--gray-100);display:flex;align-items:center;justify-content:center;font-size:3rem;">🏓</div>
-                    {%- endif -%}
-                    <span class="article-category-badge">{{ post.data.category }}</span>
-                </div>
-                <div class="article-body">
-                    <div class="article-meta">
-                        <span>{{ post.data.date | shortDate }}</span>
-                        {%- if post.data.reading_time -%}
-                        <span class="article-meta-dot">·</span>
-                        <span>⏱ {{ post.data.reading_time }} min</span>
-                        {%- endif -%}
-                    </div>
-                    <h3 class="article-title">{{ post.data.title }}</h3>
-                    <p class="article-excerpt">{{ post.data.excerpt or post.templateContent | striptags | truncate(130) }}</p>
-                </div>
-            </a>
-            {%- else -%}
-            <div class="empty-state"><p>Nessun articolo ancora. Aggiungili dal pannello admin!</p></div>
-            {%- endfor -%}
-        </div>
+      {% endfor %}
     </div>
-</section>
-
-<div class="stats-bar">
-    <div class="container">
-        <div class="stats-inner">
-            <div class="stat-item">
-                <div class="stat-number">{{ collections.teamDatabase.length }}</div>
-                <div class="stat-label">Squadre</div>
-            </div>
-            <div class="stat-item">
-                <div class="stat-number">{{ collections.blog.length }}</div>
-                <div class="stat-label">Articoli</div>
-            </div>
-            <div class="stat-item">
-                <div class="stat-number">{{ collections.partiteEnriched.length }}</div>
-                <div class="stat-label">Partite</div>
-            </div>
-        </div>
-    </div>
+  </div>
 </div>
 
-{%- if collections.partiteRecenti.length > 0 -%}
-<section class="section">
-    <div class="container">
-        <div class="section-header">
+{# 3. MAGAZINE SECTION: LOOK EDITORIALE #}
+<section class="magazine-grid container section-padding">
+  <div class="section-header">
+    <h2>Storie di <span class="highlight">Campo</span></h2>
+    <a href="/blog/" class="view-all">Leggi tutto il magazine →</a>
+  </div>
+
+  <div class="magazine-layout">
+    {% set posts = collections.blogVisible %}
+    {% if posts.length > 0 %}
+      {# Articolo Principale #}
+      <article class="post-featured">
+        <div class="post-img-wrapper">
+          <img src="{{ posts[0].data.image }}" alt="{{ posts[0].data.title }}">
+        </div>
+        <div class="post-content">
+          <span class="post-category">{{ posts[0].data.category }}</span>
+          <h3><a href="{{ posts[0].url }}">{{ posts[0].data.title }}</a></h3>
+          <p>{{ posts[0].data.excerpt | truncate(150) }}</p>
+          <time>{{ posts[0].data.date | readableDate }}</time>
+        </div>
+      </article>
+
+      {# Articoli Secondari #}
+      <div class="post-sidebar">
+        {% for post in posts | slice(1, 3) %}
+          <article class="post-mini">
+            <img src="{{ post.data.image }}" alt="{{ post.data.title }}">
             <div>
-                <span class="section-label">Ultimo risultato</span>
-                <h2 class="section-title">Risultati Recenti</h2>
+              <h4><a href="{{ post.url }}">{{ post.data.title }}</a></h4>
+              <time>{{ post.data.date | readableDate }}</time>
             </div>
-            <a href="/partite/" class="view-all">Tutte le partite →</a>
-        </div>
-        <div class="risultati-grid">
-            {%- for match in collections.partiteRecenti | limit(4) -%}
-            <div class="risultato-card">
-                <div class="risultato-header">
-                    <span class="risultato-serie">Serie A</span>
-                    <span class="risultato-data">{{ match.date_day_label }}</span>
-                </div>
-                <div class="match-display">
-                    <div class="match-team {% if match.gol_casa > match.gol_ospite %}winner{% endif %}">{{ match.home_team.name }}</div>
-                    <div class="match-score">{{ match.gol_casa }} - {{ match.gol_ospite }}</div>
-                    <div class="match-team {% if match.gol_ospite > match.gol_casa %}winner{% endif %}">{{ match.away_team.name }}</div>
-                </div>
-            </div>
-            {%- endfor -%}
-        </div>
-    </div>
+          </article>
+        {% endfor %}
+      </div>
+    {% endif %}
+  </div>
 </section>
-{%- endif -%}
+
+{# 4. DATA & MISSION: CONTRASTO VISIVO #}
+<section class="split-section">
+  <div class="container split-grid">
+    {# Classifica Rapida #}
+    <div class="standings-snapshot">
+      <h3>Classifica Serie A <span class="year">2025</span></h3>
+      {% set classificaA = collections.classificheSerieA[0] %}
+      {% if classificaA %}
+        <table class="mini-table">
+          {% for team in classificaA.data.teams | limit(5) %}
+          <tr>
+            <td>{{ team.position }}°</td>
+            <td class="team-name">{{ team.name }}</td>
+            <td class="points">{{ team.points }}</td>
+          </tr>
+          {% endfor %}
+        </table>
+        <a href="/classifiche/" class="btn-text">Vedi classifica completa</a>
+      {% endif %}
+    </div>
+
+    {# Mission del Progetto #}
+    <div id="progetto" class="mission-box">
+      <div class="mission-tag">Chi Siamo</div>
+      <h3>Non è solo un sito. È un <span class="highlight">omaggio</span>.</h3>
+      <p>Tamburello360 nasce dal desiderio di non lasciar scomparire la narrazione di uno sport che è storia, polvere e talento. Gestiamo i dati in modo automatico per lasciar spazio a ciò che conta: il racconto delle persone e dei territori.</p>
+      <div class="signature">Creato con ❤️ da un appassionato</div>
+    </div>
+  </div>
+</section>
+
+{# 5. COMMUNITY CTA #}
+<section class="community-cta">
+  <div class="container text-center">
+    <h2>Entra nel <span class="highlight">Cerchio</span></h2>
+    <p>Segui i nostri aggiornamenti live e le storie dai campi su Instagram.</p>
+    <div class="social-links">
+      <a href="#" class="social-btn ig">Instagram</a>
+      <a href="#" class="social-btn telegram">Telegram Risultati</a>
+    </div>
+  </div>
+</section>
