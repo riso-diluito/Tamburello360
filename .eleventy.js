@@ -40,6 +40,12 @@ module.exports = function(eleventyConfig) {
     return teamDatabase.find(t => t.name === teamName);
   });
 
+  eleventyConfig.addFilter("isCurrentGiornata", function(matches) {
+    if (!matches || matches.length === 0) return false;
+    // Basta controllare la prima partita del gruppo, dato che sono raggruppate per giornata
+    return matches.some(m => m.is_recommended);
+  });
+
   // ============================================================
   // COLLECTION BLOG
   // ============================================================
