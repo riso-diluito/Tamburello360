@@ -4,7 +4,7 @@ title: Cos'è il Tamburello Indoor
 date: 2025-12-03T12:00:00.000+01:00
 author: Redazione Tamburello360
 category: Lo Sport
-image: /public/images/uploads/CoseTamburelloIndoor.jpg
+image: /images/uploads/CoseTamburelloIndoor.jpg
 reading_time: 5
 ---
 Il Tamburello Indoor è una variante moderna e dinamica del tradizionale gioco del tamburello. Nasce per essere praticato al chiuso, in palestre o spazi indoor, ed è oggi una disciplina ufficiale riconosciuta dal mondo della FIPT (Federazione Italiana Palla Tamburello).

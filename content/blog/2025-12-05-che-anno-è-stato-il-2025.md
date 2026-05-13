@@ -4,7 +4,7 @@ title: Che anno è stato il 2025
 date: 2025-12-05T12:00:00.000+01:00
 author: Redazione Tamburello360
 category: Ultimi Risultati
-image: /public/images/uploads/CheAnnoStato2025.jpg
+image: /images/uploads/CheAnnoStato2025.jpg
 excerpt: ""
 reading_time: 10
 ---
