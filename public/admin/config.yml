@@ -88,6 +88,7 @@ collections:
     widget: number
     default: 1
     value_type: int
+    hint: Numero di squadre retrocesse (usato per evidenziare le ultime N righe in classifica)
   - label: Squadre
     name: teams
     widget: list

@@ -37,7 +37,7 @@ function parseFrontmatter(content) {
       data[key] = true;
     } else if (value === 'false') {
       data[key] = false;
-    } else if (!isNaN(value) && value !== '') {
+    } else if (/^\d+(\.\d+)?$/.test(value)) {
       data[key] = Number(value);
     } else {
       data[key] = value;
@@ -57,16 +57,49 @@ function leggiRisultati() {
     const content = fs.readFileSync(path.join(RISULTATI_DIR, file), 'utf8');
     const data = parseFrontmatter(content);
     
-    if (data.home_team && data.away_team && 
-    data.home_score !== undefined && data.home_score !== '' &&
-    data.away_score !== undefined && data.away_score !== '' &&
-    data.giocata === true &&
-    data.serie) {
+    if (data.home_team &&
+      data.away_team &&
+      data.giocata === true &&
+      data.serie) {
       risultati.push(data);
     }
   }
   
   return risultati;
+}
+
+function toScoreOrNull(value) {
+  if (value === null || value === undefined || value === '') {
+    return null;
+  }
+
+  const score = Number(value);
+  return Number.isNaN(score) ? null : score;
+}
+
+function resolveOutcome(result) {
+  const homeScore = toScoreOrNull(result.home_score);
+  const awayScore = toScoreOrNull(result.away_score);
+
+  if (homeScore !== null && awayScore !== null) {
+    if (homeScore > awayScore) {
+      return { homeScore, awayScore, winner: 'home', draw: false };
+    }
+    if (awayScore > homeScore) {
+      return { homeScore, awayScore, winner: 'away', draw: false };
+    }
+    return { homeScore, awayScore, winner: null, draw: true };
+  }
+
+  if (homeScore !== null) {
+    return { homeScore, awayScore, winner: 'home', draw: false };
+  }
+
+  if (awayScore !== null) {
+    return { homeScore, awayScore, winner: 'away', draw: false };
+  }
+
+  return { homeScore, awayScore, winner: null, draw: false };
 }
 
 // ============================================================
@@ -75,9 +108,14 @@ function leggiRisultati() {
 function assegnaPunti(r, serieTeams) {
   const casa = r.home_team;
   const ospite = r.away_team;
+  const outcome = resolveOutcome(r);
 
   if (!serieTeams[casa]) serieTeams[casa] = { name: casa, points: 0, wins: 0, draws: 0, losses: 0, played: 0 };
   if (!serieTeams[ospite]) serieTeams[ospite] = { name: ospite, points: 0, wins: 0, draws: 0, losses: 0, played: 0 };
+
+  if (!outcome.draw && !outcome.winner) {
+    return;
+  }
 
   serieTeams[casa].played++;
   serieTeams[ospite].played++;
@@ -89,8 +127,14 @@ function assegnaPunti(r, serieTeams) {
 
   if (isOutdoor) {
     // Sistema outdoor: set vinti (home_score/away_score = es. 2/0 o 2/1)
-    const casaVince = r.home_score > r.away_score;
-    const tiebreak = r.tiebreak === true || (r.home_score === 2 && r.away_score === 1) || (r.home_score === 1 && r.away_score === 2);
+    if (!outcome.winner) {
+      return;
+    }
+
+    const casaVince = outcome.winner === 'home';
+    const tiebreak = r.tiebreak === true ||
+      (outcome.homeScore === 2 && outcome.awayScore === 1) ||
+      (outcome.homeScore === 1 && outcome.awayScore === 2);
 
     if (casaVince) {
       serieTeams[casa].wins++;
@@ -115,15 +159,15 @@ function assegnaPunti(r, serieTeams) {
     }
   } else {
     // Sistema indoor: punteggio diretto (es. 13-4)
-    if (r.home_score > r.away_score) {
+    if (outcome.winner === 'home') {
       serieTeams[casa].wins++;
       serieTeams[casa].points += 2;
       serieTeams[ospite].losses++;
-    } else if (r.away_score > r.home_score) {
+    } else if (outcome.winner === 'away') {
       serieTeams[ospite].wins++;
       serieTeams[ospite].points += 2;
       serieTeams[casa].losses++;
-    } else {
+    } else if (outcome.draw) {
       serieTeams[casa].draws++;
       serieTeams[casa].points += 1;
       serieTeams[ospite].draws++;

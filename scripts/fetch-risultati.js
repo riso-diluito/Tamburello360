@@ -71,6 +71,9 @@ function parsePartite(html, campionato, giornata) {
   const partite = [];
 
   const matchBlocks = html.split('<div class="match-element">').slice(1);
+  if (matchBlocks.length === 0) {
+    console.warn(`  ⚠️  Nessun blocco partita trovato nell'HTML (giornata ${giornata}). Struttura HTML cambiata?`);
+  }
 
   for (const block of matchBlocks) {
     if (block.includes('Turno di riposo')) continue;
@@ -97,7 +100,10 @@ function parsePartite(html, campionato, giornata) {
 
     // Estrai nomi squadre
     const nomiMatch = [...block.matchAll(/<div class='participant-name[^']*'>\s*([^<]+?)\s*<\/div>/g)];
-    if (nomiMatch.length < 2) continue;
+    if (nomiMatch.length < 2) {
+      console.warn(`  ⚠️  Blocco partita saltato: nomi squadre non trovati (giornata ${giornata})`);
+      continue;
+    }
     const casa = nomiMatch[0][1].trim();
     const ospite = nomiMatch[1][1].trim();
     if (!casa || !ospite) continue;
@@ -195,7 +201,7 @@ function parseFrontmatter(content) {
       data[key] = true;
     } else if (value === 'false') {
       data[key] = false;
-    } else if (!isNaN(value) && value !== '') {
+    } else if (/^\d+(\.\d+)?$/.test(value)) {
       data[key] = Number(value);
     } else {
       data[key] = value;
