@@ -53,8 +53,18 @@ module.exports = function(eleventyConfig) {
   });
 
   eleventyConfig.addFilter("findTeam", (teamName, teamDatabase) => {
-    if (!teamDatabase) return null;
-    return teamDatabase.find(t => t.name === teamName);
+    if (!teamDatabase || !teamName) return null;
+    const normalized = String(teamName).trim().toLowerCase();
+    return teamDatabase.find(t =>
+      t.name.toLowerCase() === normalized ||
+      t.slug.toLowerCase() === normalized ||
+      t.team_code.toLowerCase() === normalized
+    ) || null;
+  });
+
+  eleventyConfig.addFilter("playedMatches", function(matches) {
+    if (!Array.isArray(matches)) return [];
+    return matches.filter(match => match && match.is_played);
   });
 
   eleventyConfig.addFilter("toPartiteClientData", function(matches) {
@@ -161,6 +171,22 @@ module.exports = function(eleventyConfig) {
       .filter(m => m.is_played)
       .sort((a, b) => b.sort_timestamp - a.sort_timestamp)
       .slice(0, 10);
+  });
+
+  eleventyConfig.addCollection("partitePerSquadra", function(collectionApi) {
+    const partiteEntries = collectionApi.getFilteredByGlob("content/risultati/*.md");
+    const teamLookup = getTeamLookup(collectionApi);
+    const enriched = buildEnrichedMatches(partiteEntries, teamLookup);
+
+    const bySlug = {};
+    enriched.forEach(match => {
+      [match.home_team.slug, match.away_team.slug].forEach(slug => {
+        if (!slug) return;
+        if (!bySlug[slug]) bySlug[slug] = [];
+        bySlug[slug].push(match);
+      });
+    });
+    return bySlug;
   });
 
   // ============================================================

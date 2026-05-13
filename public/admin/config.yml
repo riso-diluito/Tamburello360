@@ -225,6 +225,8 @@ collections:
     name: logo
     widget: image
     required: false
+    media_folder: /public/images/teams
+    public_folder: /images/teams
   - label: Colore Primario
     name: color_primary
     widget: string

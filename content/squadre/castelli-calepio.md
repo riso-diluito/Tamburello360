@@ -6,6 +6,6 @@ city: Castelli Calepio
 serie: Serie A
 lat: 45.61751
 lng: 9.89045
-logo: /public/images/teams/castelli-calepio.png
+logo: /images/teams/castelli-calepio.png
 color_primary: "#2784C7"
 ---

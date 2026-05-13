@@ -84,11 +84,15 @@
 
         function renderMatchCard(match) {
             const homeLogo = match.home_team && match.home_team.logo
-                ? `<img class="partita-team-logo" src="${escapeHtml(match.home_team.logo)}" alt="Logo ${escapeHtml(match.home_team.name)}">`
+                ? `<img class="partita-team-logo" src="${escapeHtml(match.home_team.logo)}" alt="Logo ${escapeHtml(match.home_team.name)}"
+                        onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+                   <span class="partita-team-logo partita-team-logo--placeholder" style="display:none" aria-hidden="true">${escapeHtml(match.home_team.initial || '?')}</span>`
                 : `<span class="partita-team-logo partita-team-logo--placeholder" aria-hidden="true">${escapeHtml(match.home_team.initial || '?')}</span>`;
 
             const awayLogo = match.away_team && match.away_team.logo
-                ? `<img class="partita-team-logo" src="${escapeHtml(match.away_team.logo)}" alt="Logo ${escapeHtml(match.away_team.name)}">`
+                ? `<img class="partita-team-logo" src="${escapeHtml(match.away_team.logo)}" alt="Logo ${escapeHtml(match.away_team.name)}"
+                        onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+                   <span class="partita-team-logo partita-team-logo--placeholder" style="display:none" aria-hidden="true">${escapeHtml(match.away_team.initial || '?')}</span>`
                 : `<span class="partita-team-logo partita-team-logo--placeholder" aria-hidden="true">${escapeHtml(match.away_team.initial || '?')}</span>`;
 
             const centerContent = match.is_played

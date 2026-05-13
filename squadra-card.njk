@@ -14,7 +14,9 @@
     <div class="team-card-main">
         <div class="team-logo-wrap">
             {% if team.logo %}
-                <img src="{{ team.logo }}" alt="{{ team.name }} logo" class="team-logo">
+                <img src="{{ team.logo }}" alt="{{ team.name }} logo" class="team-logo"
+                     onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+                <div class="team-logo team-logo--placeholder" style="display:none">{{ team.team_code }}</div>
             {% else %}
                 <div class="team-logo team-logo--placeholder">{{ team.team_code }}</div>
             {% endif %}

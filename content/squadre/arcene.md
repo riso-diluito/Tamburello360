@@ -6,6 +6,6 @@ city: Arcene
 serie: Serie A
 lat: 45.57751
 lng: 9.6223
-logo: /public/images/teams/arcene.png
+logo: /images/teams/arcene.png
 color_primary: "#1B3F8B"
 ---

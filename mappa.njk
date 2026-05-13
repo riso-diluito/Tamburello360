@@ -64,6 +64,8 @@ title: Mappa delle Squadre
     ];
 
     squadre.forEach(s => {
+        if (!s.lat || !s.lng) return;
+
         const marker = L.marker([s.lat, s.lng], { icon: makeIcon(s.team_code, s.color || '#d62828', s.logo) }).addTo(map);
 
         let popup = `<div style="font-family:'Barlow',sans-serif;min-width:190px;">

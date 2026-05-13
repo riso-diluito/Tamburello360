@@ -14,7 +14,7 @@ title: Squadre
         </div>
         <div class="squadre-grid" id="squadreGrid">
             {%- for team in collections.teamDatabase -%}
-            <div class="team-card" style="background-color: {{ team.color_primary }};">
+            <a href="/squadre/{{ team.slug }}/partite/" class="team-card" style="background-color: {{ team.color_primary }};">
                 <span class="team-card-orbit" aria-hidden="true"></span>
                 <span class="team-card-slash" aria-hidden="true"></span>
                 <span class="team-card-rect" aria-hidden="true"></span>
@@ -22,7 +22,9 @@ title: Squadre
                 <div class="team-card-main">
                     <div class="team-logo-wrap">
                         {%- if team.logo -%}
-                        <img src="{{ team.logo }}" alt="{{ team.name }}" class="team-logo">
+                        <img src="{{ team.logo }}" alt="{{ team.name }}" class="team-logo"
+                             onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+                        <div class="team-logo team-logo--placeholder" style="display:none">{{ team.team_code }}</div>
                         {%- else -%}
                         <div class="team-logo team-logo--placeholder">{{ team.team_code }}</div>
                         {%- endif -%}
@@ -30,22 +32,13 @@ title: Squadre
                     </div>
                 </div>
                 <div class="team-card-divider"></div>
-                <div class="team-card-actions">
-                    <div class="team-action team-action--left">
-                        <a href="{{ team.history_url }}" class="team-action-link">Storia</a>
-                        <span aria-hidden="true">&middot;</span>
-                        <a href="/squadre/{{ team.slug }}/partite/" class="team-action-link">Partite</a>
-                    </div>
-                    <div class="team-action team-action--right">
-                        <a href="{{ team.map_url }}" target="_blank" rel="noopener" class="team-action-link team-action-link--pill">
-                            <svg width="10" height="12" viewBox="0 0 12 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M6 0C3.79 0 2 1.79 2 4c0 3 4 9 4 9s4-6 4-9c0-2.21-1.79-4-4-4zm0 5.5A1.5 1.5 0 1 1 6 2.5a1.5 1.5 0 0 1 0 3z" fill="white"/>
-                            </svg>
-                            <span>{{ team.city }}</span>
-                        </a>
-                    </div>
+                <div class="team-card-footer">
+                    <svg width="10" height="12" viewBox="0 0 12 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M6 0C3.79 0 2 1.79 2 4c0 3 4 9 4 9s4-6 4-9c0-2.21-1.79-4-4-4zm0 5.5A1.5 1.5 0 1 1 6 2.5a1.5 1.5 0 0 1 0 3z" fill="white"/>
+                    </svg>
+                    <span>{{ team.city }}</span>
                 </div>
-            </div>
+            </a>
             {%- else -%}
             <div class="empty-state"><p>Nessuna squadra ancora. Aggiungile dal pannello admin!</p></div>
             {%- endfor -%}
