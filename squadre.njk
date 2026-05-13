@@ -33,6 +33,8 @@ title: Squadre
                 <div class="team-card-actions">
                     <div class="team-action team-action--left">
                         <a href="{{ team.history_url }}" class="team-action-link">Storia</a>
+                        <span aria-hidden="true">&middot;</span>
+                        <a href="/squadre/{{ team.slug }}/partite/" class="team-action-link">Partite</a>
                     </div>
                     <div class="team-action team-action--right">
                         <a href="{{ team.map_url }}" target="_blank" rel="noopener" class="team-action-link team-action-link--pill">

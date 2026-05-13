@@ -18,14 +18,34 @@
     --font-display: 'Bebas Neue', sans-serif;
     --font-accent: 'Barlow Condensed', sans-serif;
     --font-body: 'Barlow', sans-serif;
+    --font-condensed: var(--font-accent);
 
     /* Layout */
     --radius-sm: 8px;
     --radius-md: 16px;
     --radius-full: 999px;
+    --radius-lg: 24px;
+    --radius-xl: 34px;
     --container-max: 1280px;
     --shadow-md: 0 8px 24px rgba(0,0,0,0.12);
+    --shadow-sm: 0 14px 34px rgba(15, 23, 42, 0.07);
+    --shadow-lg: 0 28px 64px rgba(15, 23, 42, 0.16);
     --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+    /* Visual Refresh */
+    --red: #d62828;
+    --red-dark: #8d1717;
+    --navy: #0f2d46;
+    --navy-light: #355d81;
+    --orange: #f08c2e;
+    --orange-light: #ffd6a0;
+    --black: #09131d;
+    --text: #1f2937;
+    --gray-50: #f8fafc;
+    --gray-100: #eef2f6;
+    --gray-200: #d6dee8;
+    --gray-400: #7f8b99;
+    --gray-600: #465466;
 }
 
 /* ============ RESET & BASE ============ */
@@ -1098,7 +1118,7 @@ header.scrolled { box-shadow: 0 4px 30px rgba(0,0,0,0.25); }
 /* ============ SQUADRE ============ */
 .squadre-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     gap: 1.5rem;
 }
 
@@ -2240,28 +2260,6 @@ footer {
     }
 }
 
-/* ============ VISUAL REFRESH ============ */
-:root {
-    --red: #d62828;
-    --red-dark: #8d1717;
-    --navy: #0f2d46;
-    --navy-light: #355d81;
-    --orange: #f08c2e;
-    --orange-light: #ffd6a0;
-    --black: #09131d;
-    --text: #1f2937;
-    --gray-50: #f8fafc;
-    --gray-100: #eef2f6;
-    --gray-200: #d6dee8;
-    --gray-400: #7f8b99;
-    --gray-600: #465466;
-    --font-condensed: var(--font-accent);
-    --radius-lg: 24px;
-    --radius-xl: 34px;
-    --shadow-sm: 0 14px 34px rgba(15, 23, 42, 0.07);
-    --shadow-lg: 0 28px 64px rgba(15, 23, 42, 0.16);
-}
-
 html {
     background:
         radial-gradient(circle at top left, rgba(240, 140, 46, 0.12), transparent 22%),
@@ -3142,5 +3140,23 @@ footer {
     .social-btn {
         width: 100%;
         min-width: 0;
+    }
+}
+
+@media (max-width: 380px) {
+    .partita-card-main {
+        grid-template-columns: 1fr;
+        text-align: center;
+    }
+
+    .partita-team-wrap,
+    .partita-team-wrap--away {
+        justify-content: center;
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .partita-card-center {
+        order: -1;
     }
 }

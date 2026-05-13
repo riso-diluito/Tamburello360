@@ -1,22 +1,27 @@
-<section class="section partite-page" data-serie="A">
+<div class="page-header">
+    <h1>Partite {{ team.name }}</h1>
+    <p>Tutte le sfide di {{ team.name }} nel match center.</p>
+</div>
+
+<section class="section partite-page" data-team="{{ team.slug }}">
     <div class="container">
         <div class="partite-serie-badge-wrap">
-            <div class="partite-serie-badge">SERIE A</div>
+            <div class="partite-serie-badge">{{ team.name }}</div>
         </div>
 
-        <div class="partite-round-nav" aria-label="Navigazione giornate">
-            <button class="partite-round-arrow" id="partitePrevRound" type="button" aria-label="Vai alla giornata precedente">
+        <div class="partite-round-nav" aria-label="Navigazione giornate {{ team.name }}">
+            <button class="partite-round-arrow" id="teamPartitePrevRound" type="button" aria-label="Vai alla giornata precedente">
                 <span aria-hidden="true">&lt;</span>
             </button>
-            <div class="partite-round-label" id="partiteRoundLabel">GIORNATA 1</div>
-            <button class="partite-round-arrow" id="partiteNextRound" type="button" aria-label="Vai alla giornata successiva">
+            <div class="partite-round-label" id="teamPartiteRoundLabel">GIORNATA 1</div>
+            <button class="partite-round-arrow" id="teamPartiteNextRound" type="button" aria-label="Vai alla giornata successiva">
                 <span aria-hidden="true">&gt;</span>
             </button>
         </div>
 
-        <div class="partite-list" id="partiteList">
+        <div class="partite-list" id="teamPartiteList">
             <div class="empty-state">
-                <p>Nessuna partita disponibile.</p>
+                <p>Nessuna partita disponibile per {{ team.name }}.</p>
             </div>
         </div>
     </div>
@@ -26,11 +31,13 @@
     window.partiteData = {{ collections.partiteEnriched | toPartiteClientData | dump | safe }};
 
     (function () {
-        const list = document.getElementById('partiteList');
-        const roundLabel = document.getElementById('partiteRoundLabel');
-        const prevButton = document.getElementById('partitePrevRound');
-        const nextButton = document.getElementById('partiteNextRound');
-        const matches = Array.isArray(window.partiteData) ? window.partiteData : [];
+        const teamName = {{ team.name | dump | safe }};
+        const list = document.getElementById('teamPartiteList');
+        const roundLabel = document.getElementById('teamPartiteRoundLabel');
+        const prevButton = document.getElementById('teamPartitePrevRound');
+        const nextButton = document.getElementById('teamPartiteNextRound');
+        const allMatches = Array.isArray(window.partiteData) ? window.partiteData : [];
+        const matches = allMatches.filter(match => match.home_team.name === teamName || match.away_team.name === teamName);
         let renderTimer = null;
 
         const state = {
@@ -128,7 +135,7 @@
         function renderEmptyState() {
             list.innerHTML = `
                 <div class="empty-state">
-                    <p>Nessuna partita inserita per Serie A alla giornata ${state.giornata}.</p>
+                    <p>Nessuna partita inserita per ${escapeHtml(teamName)} alla giornata ${state.giornata}.</p>
                 </div>
             `;
         }

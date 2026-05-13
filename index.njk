@@ -62,16 +62,16 @@ title: Tamburello360 - La Casa Indipendente del Tamburello Italiano
         <div class="ticker-scroll">
           {% for match in collections.partiteRecenti | limit(6) %}
             <span class="ticker-match">
-              <strong>{{ match.squadra_casa }}</strong>
-              {{ match.gol_casa }}-{{ match.gol_ospite }}
-              <strong>{{ match.squadra_ospite }}</strong>
+              <strong>{{ match.home_team.name }}</strong>
+              {{ match.score_label }}
+              <strong>{{ match.away_team.name }}</strong>
             </span>
           {% endfor %}
           {% for match in collections.partiteRecenti | limit(6) %}
             <span class="ticker-match">
-              <strong>{{ match.squadra_casa }}</strong>
-              {{ match.gol_casa }}-{{ match.gol_ospite }}
-              <strong>{{ match.squadra_ospite }}</strong>
+              <strong>{{ match.home_team.name }}</strong>
+              {{ match.score_label }}
+              <strong>{{ match.away_team.name }}</strong>
             </span>
           {% endfor %}
         </div>

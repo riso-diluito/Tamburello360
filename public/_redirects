@@ -1,2 +1,3 @@
 # Cloudflare Pages redirects
-# Nessuna regola SPA - Eleventy genera già le pagine statiche correttamente
+# Nessuna regola SPA - Eleventy genera gia le pagine statiche correttamente
+/* /404.html 404

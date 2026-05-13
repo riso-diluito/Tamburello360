@@ -2,6 +2,21 @@ const { buildTeamDatabase, buildTeamLookup } = require('./lib/team-database');
 const { buildEnrichedMatches } = require('./lib/partite');
 
 module.exports = function(eleventyConfig) {
+  let cachedTeamLookup = null;
+
+  function getTeamLookup(collectionApi) {
+    // Eleventy collections non possono dipendere in modo affidabile tra loro:
+    // usiamo quindi un helper memoizzato per evitare il doppio calcolo.
+    if (cachedTeamLookup) {
+      return cachedTeamLookup;
+    }
+
+    const entries = collectionApi.getFilteredByGlob("content/squadre/*.md");
+    const db = buildTeamDatabase(entries);
+    cachedTeamLookup = buildTeamLookup(db);
+    return cachedTeamLookup;
+  }
+
   // Mappa il contenuto di public alla radice del sito finale.
   // Questo rende i percorsi più semplici: /css/style.css invece di /public/css/style.css
   eleventyConfig.addPassthroughCopy({ "public": "/" });
@@ -42,6 +57,32 @@ module.exports = function(eleventyConfig) {
     return teamDatabase.find(t => t.name === teamName);
   });
 
+  eleventyConfig.addFilter("toPartiteClientData", function(matches) {
+    return (matches || []).map(m => ({
+      id: m.id,
+      giornata: m.giornata,
+      is_played: m.is_played,
+      is_recommended: m.is_recommended,
+      score_label: m.score_label,
+      date_day_label: m.date_day_label,
+      date_time_label: m.date_time_label,
+      map_url: m.map_url,
+      info_url: m.info_url,
+      gradient: m.gradient,
+      stato: m.stato,
+      home_team: {
+        name: m.home_team.name,
+        logo: m.home_team.logo,
+        initial: m.home_team.initial
+      },
+      away_team: {
+        name: m.away_team.name,
+        logo: m.away_team.logo,
+        initial: m.away_team.initial
+      }
+    }));
+  });
+
   eleventyConfig.addFilter("isCurrentGiornata", function(matches) {
     if (!matches || matches.length === 0) return false;
     // Basta controllare la prima partita del gruppo, dato che sono raggruppate per giornata
@@ -73,6 +114,10 @@ module.exports = function(eleventyConfig) {
     return buildTeamDatabase(entries);
   });
 
+  eleventyConfig.addCollection("teamLookup", function(collectionApi) {
+    return getTeamLookup(collectionApi);
+  });
+
   // ============================================================
   // COLLECTION CLASSIFICHE
   // ============================================================
@@ -102,20 +147,14 @@ module.exports = function(eleventyConfig) {
   });
 
   eleventyConfig.addCollection("partiteEnriched", function(collectionApi) {
-    const squadreEntries = collectionApi.getFilteredByGlob("content/squadre/*.md");
-    const teamDb = buildTeamDatabase(squadreEntries);
-    const teamLookup = buildTeamLookup(teamDb);
-
     const partiteEntries = collectionApi.getFilteredByGlob("content/risultati/*.md");
+    const teamLookup = getTeamLookup(collectionApi);
     return buildEnrichedMatches(partiteEntries, teamLookup);
   });
 
   eleventyConfig.addCollection("partiteRecenti", function(collectionApi) {
-    const squadreEntries = collectionApi.getFilteredByGlob("content/squadre/*.md");
-    const teamDb = buildTeamDatabase(squadreEntries);
-    const teamLookup = buildTeamLookup(teamDb);
-
     const partiteEntries = collectionApi.getFilteredByGlob("content/risultati/*.md");
+    const teamLookup = getTeamLookup(collectionApi);
     const enriched = buildEnrichedMatches(partiteEntries, teamLookup);
 
     return enriched

@@ -10,42 +10,10 @@
 
 const fs = require('fs');
 const path = require('path');
+const { parseFrontmatter } = require('../lib/frontmatter');
 
 const RISULTATI_DIR = path.join(__dirname, '..', 'content', 'risultati');
 const CLASSIFICHE_DIR = path.join(__dirname, '..', 'content', 'classifiche');
-
-// ============================================================
-// LETTURA FRONTMATTER
-// ============================================================
-function parseFrontmatter(content) {
-  const match = content.match(/^---\n([\s\S]*?)\n---/);
-  if (!match) return {};
-  
-  const data = {};
-  const lines = match[1].split('\n');
-  
-  for (const line of lines) {
-    const colonIdx = line.indexOf(':');
-    if (colonIdx === -1) continue;
-    const key = line.substring(0, colonIdx).trim();
-    const value = line.substring(colonIdx + 1).trim();
-    
-    if ((value.startsWith('"') && value.endsWith('"')) ||
-        (value.startsWith("'") && value.endsWith("'"))) {
-      data[key] = value.slice(1, -1);
-    } else if (value === 'true') {
-      data[key] = true;
-    } else if (value === 'false') {
-      data[key] = false;
-    } else if (/^\d+(\.\d+)?$/.test(value)) {
-      data[key] = Number(value);
-    } else {
-      data[key] = value;
-    }
-  }
-  
-  return data;
-}
 
 function leggiRisultati() {
   if (!fs.existsSync(RISULTATI_DIR)) return [];

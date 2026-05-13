@@ -1,0 +1,13 @@
+---
+layout: base.njk
+pagination:
+  data: collections.teamDatabase
+  size: 1
+  alias: team
+permalink: "/squadre/{{ team.slug }}/partite/"
+eleventyComputed:
+  title: "Partite {{ team.name }}"
+  description: "Calendario e risultati di {{ team.name }} su Tamburello360."
+---
+
+{% include "squadra-partite.njk" %}
