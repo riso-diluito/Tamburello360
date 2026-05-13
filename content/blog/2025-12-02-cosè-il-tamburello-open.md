@@ -4,7 +4,7 @@ title: Cos'è il Tamburello Open
 date: 2025-12-02T12:00:00.000+01:00
 author: Redazione Tamburello360
 category: Lo Sport
-image: /images/uploads/CoseTamburelloOpen.jpg
+image: /images/uploads/cosetamburelloopen.jpg
 reading_time: 5
 ---
 Il Tamburello Open è la forma più tradizionale, spettacolare e diffusa dello sport del tamburello, una disciplina storica italiana che combina potenza, tecnica e tattica. Si gioca all’aperto, su campi ampi, e mette in scena colpi lunghi, velocità e scambi spettacolari che lo rendono uno degli sport più affascinanti del panorama italiano.
