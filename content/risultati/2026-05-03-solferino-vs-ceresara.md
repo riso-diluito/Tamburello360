@@ -6,7 +6,7 @@ giornata: 6
 home_team: Solferino
 away_team: Ceresara
 home_score: 2
-away_score: 0
+away_score: 
 tiebreak: false
 giocata: true
 auto_generated: true

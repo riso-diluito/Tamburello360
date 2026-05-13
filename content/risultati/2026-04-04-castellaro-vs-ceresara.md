@@ -5,7 +5,7 @@ tipo: outdoor
 giornata: 2
 home_team: Castellaro
 away_team: Ceresara
-home_score: 0
+home_score: 
 away_score: 2
 tiebreak: false
 giocata: true

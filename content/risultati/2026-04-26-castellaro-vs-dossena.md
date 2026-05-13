@@ -5,7 +5,7 @@ tipo: outdoor
 giornata: 5
 home_team: Castellaro
 away_team: Dossena
-home_score: 0
+home_score: 
 away_score: 2
 tiebreak: false
 giocata: true

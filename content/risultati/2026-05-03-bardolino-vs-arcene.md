@@ -5,7 +5,7 @@ tipo: outdoor
 giornata: 6
 home_team: Bardolino
 away_team: Arcene
-home_score: 0
+home_score: 
 away_score: 2
 tiebreak: false
 giocata: true

@@ -5,7 +5,7 @@ tipo: outdoor
 giornata: 3
 home_team: Castelli Calepio
 away_team: Cavrianese
-home_score: 0
+home_score: 
 away_score: 2
 tiebreak: false
 giocata: true
