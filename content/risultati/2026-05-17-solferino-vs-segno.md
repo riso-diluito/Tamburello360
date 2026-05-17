@@ -5,7 +5,7 @@ tipo: outdoor
 giornata: 8
 home_team: Solferino
 away_team: Segno
-home_score: 
+home_score: 1
 away_score: 
 tiebreak: false
 giocata: false
