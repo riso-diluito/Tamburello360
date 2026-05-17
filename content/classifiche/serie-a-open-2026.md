@@ -2,7 +2,7 @@
 serie: Serie A Open
 tipo: outdoor
 year: 2026
-updated: 2026-05-17T16:30:58.598Z
+updated: 2026-05-17T18:01:47.880Z
 teams:
   - position: 1
     name: Dossena
@@ -41,11 +41,11 @@ teams:
     played: 8
   - position: 6
     name: Castellaro
-    points: 7
-    wins: 2
+    points: 10
+    wins: 3
     draws: 0
     losses: 5
-    played: 7
+    played: 8
   - position: 7
     name: Cavrianese
     points: 6
@@ -58,8 +58,8 @@ teams:
     points: 5
     wins: 2
     draws: 0
-    losses: 5
-    played: 7
+    losses: 6
+    played: 8
   - position: 9
     name: Castelli Calepio
     points: 3
