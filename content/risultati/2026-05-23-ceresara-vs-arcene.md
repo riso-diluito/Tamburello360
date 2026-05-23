@@ -5,7 +5,7 @@ tipo: outdoor
 giornata: 9
 home_team: Ceresara
 away_team: Arcene
-home_score: 
+home_score: 1
 away_score: 1
 tiebreak: false
 giocata: false

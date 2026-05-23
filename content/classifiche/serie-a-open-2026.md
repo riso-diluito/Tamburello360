@@ -2,7 +2,7 @@
 serie: Serie A Open
 tipo: outdoor
 year: 2026
-updated: 2026-05-23T14:41:36.925Z
+updated: 2026-05-23T16:04:52.798Z
 teams:
   - position: 1
     name: Dossena
@@ -26,15 +26,15 @@ teams:
     losses: 2
     played: 8
   - position: 4
-    name: Arcene
-    points: 15
-    wins: 5
+    name: Segno
+    points: 17
+    wins: 6
     draws: 0
     losses: 3
-    played: 8
+    played: 9
   - position: 5
-    name: Segno
-    points: 14
+    name: Arcene
+    points: 15
     wins: 5
     draws: 0
     losses: 3
@@ -48,18 +48,18 @@ teams:
     played: 8
   - position: 7
     name: Cavrianese
-    points: 6
-    wins: 2
+    points: 9
+    wins: 3
     draws: 0
     losses: 6
-    played: 8
+    played: 9
   - position: 8
     name: Bardolino
     points: 5
     wins: 2
     draws: 0
-    losses: 6
-    played: 8
+    losses: 7
+    played: 9
   - position: 9
     name: Castelli Calepio
     points: 3
@@ -72,6 +72,6 @@ teams:
     points: 1
     wins: 0
     draws: 0
-    losses: 8
-    played: 8
+    losses: 9
+    played: 9
 ---
