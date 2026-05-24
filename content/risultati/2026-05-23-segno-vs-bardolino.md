@@ -5,9 +5,9 @@ tipo: outdoor
 giornata: 9
 home_team: Segno
 away_team: Bardolino
-home_score: 
+home_score: 2
 away_score: 
 tiebreak: false
-giocata: false
+giocata: true
 auto_generated: true
 ---

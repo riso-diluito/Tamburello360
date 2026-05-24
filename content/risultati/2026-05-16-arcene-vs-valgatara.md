@@ -5,9 +5,9 @@ tipo: outdoor
 giornata: 8
 home_team: Arcene
 away_team: Valgatara
-home_score: 
+home_score: 2
 away_score: 
 tiebreak: false
-giocata: false
+giocata: true
 auto_generated: true
 ---
