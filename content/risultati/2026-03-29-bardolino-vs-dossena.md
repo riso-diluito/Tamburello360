@@ -5,7 +5,7 @@ tipo: outdoor
 giornata: 1
 home_team: Bardolino
 away_team: Dossena
-home_score: 
+home_score: 0
 away_score: 2
 tiebreak: false
 giocata: true

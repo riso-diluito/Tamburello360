@@ -3,7 +3,6 @@ layout: base.njk
 title: Tamburello360 - La Casa Indipendente del Tamburello Italiano
 ---
 
-{% set hasEnrichedMatches = collections.partiteEnriched and collections.partiteEnriched.length > 0 %}
 {% set hasSerieAStandings = collections.classificheSerieA and collections.classificheSerieA.length > 0 and collections.classificheSerieA[0].data.teams %}
 
 {# 1. HERO STAGE: CINEMATOGRAFICA #}
@@ -21,37 +20,6 @@ title: Tamburello360 - La Casa Indipendente del Tamburello Italiano
       <div class="hero-cta-group">
         <a href="/partite/" class="btn btn-primary">Match Center</a>
         <a href="/blog/" class="btn btn-outline">Storie di Campo</a>
-      </div>
-    </div>
-
-    <div class="hero-sidebar-data">
-      {% if hasEnrichedMatches %}
-        {% set nextMatch = collections.partiteEnriched | selectattr("is_recommended", "equalto", true) | first %}
-        {% if nextMatch %}
-        <div class="hero-featured-match">
-          <span class="live-indicator">Match Center</span>
-          <div class="match-teams-box">
-            <span>{{ nextMatch.home_team.name }}</span>
-            <small>VS</small>
-            <span>{{ nextMatch.away_team.name }}</span>
-          </div>
-          <div class="match-footer">
-            {{ nextMatch.date_day_label }} ore {{ nextMatch.date_time_label }}
-          </div>
-        </div>
-        {% endif %}
-      {% endif %}
-
-      <div class="hero-standings-mini">
-        <small>Top 3 Serie A</small>
-        {% if hasSerieAStandings %}
-          {% for team in collections.classificheSerieA[0].data.teams | limit(3) %}
-            <div class="standing-row">
-              <span>{{ team.name }}</span>
-              <strong>{{ team.points }}</strong>
-            </div>
-          {% endfor %}
-        {% endif %}
       </div>
     </div>
   </div>

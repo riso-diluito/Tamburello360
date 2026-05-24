@@ -6,7 +6,7 @@ giornata: 7
 home_team: Segno
 away_team: Cavrianese
 home_score: 2
-away_score: 
+away_score: 0
 tiebreak: false
 giocata: true
 auto_generated: true

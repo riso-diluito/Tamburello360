@@ -5,7 +5,7 @@ tipo: outdoor
 giornata: 7
 home_team: Valgatara
 away_team: Dossena
-home_score: 
+home_score: 0
 away_score: 2
 tiebreak: false
 giocata: true

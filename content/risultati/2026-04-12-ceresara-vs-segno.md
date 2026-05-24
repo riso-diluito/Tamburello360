@@ -6,7 +6,7 @@ giornata: 3
 home_team: Ceresara
 away_team: Segno
 home_score: 2
-away_score: 
+away_score: 0
 tiebreak: false
 giocata: true
 auto_generated: true

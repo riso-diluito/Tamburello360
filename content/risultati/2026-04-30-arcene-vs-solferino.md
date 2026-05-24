@@ -5,7 +5,7 @@ tipo: outdoor
 giornata: 5
 home_team: Arcene
 away_team: Solferino
-home_score: 
+home_score: 0
 away_score: 2
 tiebreak: false
 giocata: true

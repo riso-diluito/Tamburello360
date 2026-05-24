@@ -123,13 +123,11 @@ header.scrolled { box-shadow: 0 4px 30px rgba(0,0,0,0.25); }
     z-index: 1;
     background: radial-gradient(circle at 30% 50%, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.9) 100%);
 }
-.hero-main-content { position: relative; z-index: 2; display: grid; grid-template-columns: 1.3fr 0.7fr; gap: 4rem; padding: 120px 20px; }
+.hero-main-content { position: relative; z-index: 2; display: grid; grid-template-columns: 1fr; gap: 4rem; padding: 120px 20px; }
 .hero-title { font-family: var(--font-display); font-size: clamp(4rem, 10vw, 7.5rem); line-height: 0.85; margin-bottom: 1.5rem; }
 .hero-badge { display: inline-block; background: var(--brand-red); padding: 5px 12px; font-weight: 800; font-size: 0.75rem; letter-spacing: 2px; margin-bottom: 1rem; }
 
-/* SIDEBAR & TICKER */
-.hero-sidebar-data { display: flex; flex-direction: column; gap: 2rem; }
-.hero-featured-match { background: rgba(255,255,255,0.05); backdrop-filter: blur(15px); padding: 1.5rem; border-radius: var(--radius-sm); border: 1px solid rgba(255,255,255,0.1); }
+/* TICKER */
 .hero-live-bar { position: absolute; bottom: 0; left: 0; width: 100%; background: var(--brand-red); color: white; padding: 12px 0; z-index: 3; }
 .ticker-scroll { display: flex; gap: 3rem; white-space: nowrap; animation: tickerScroll 30s linear infinite; }
 @keyframes tickerScroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
@@ -151,7 +149,6 @@ header.scrolled { box-shadow: 0 4px 30px rgba(0,0,0,0.25); }
 /* ============ RESPONSIVE ============ */
 @media (max-width: 1024px) {
     .hero-main-content { grid-template-columns: 1fr; text-align: center; padding-top: 80px; }
-    .hero-sidebar-data { display: none; }
     .magazine-layout, .split-grid { grid-template-columns: 1fr; }
     .nav-menu { display: none; }
     .hamburger { display: flex; }
@@ -2037,7 +2034,6 @@ footer {
 @media (max-width: 900px) {
     .nav-menu { display: none; }
     .hamburger { display: flex; }
-    .hero-classifica { display: none; }
     .classifiche-board { grid-template-columns: 1fr; }
     .classifica-card-head { flex-direction: column; }
     .classifica-updated { text-align: left; }
@@ -2549,93 +2545,6 @@ header.scrolled {
     gap: 1rem;
 }
 
-.hero-featured-match,
-.hero-standings-mini {
-    background: rgba(255,255,255,0.08);
-    border: 1px solid rgba(255,255,255,0.14);
-    border-radius: 28px;
-    padding: 1.35rem;
-    box-shadow: 0 24px 48px rgba(0,0,0,0.18);
-}
-
-.live-indicator {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.45rem;
-    margin-bottom: 1rem;
-    color: var(--orange-light);
-    font-family: var(--font-condensed);
-    font-size: 0.82rem;
-    font-weight: 700;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-}
-
-.live-indicator::before {
-    content: '';
-    width: 9px;
-    height: 9px;
-    border-radius: 50%;
-    background: #ff5c5c;
-    box-shadow: 0 0 0 6px rgba(255, 92, 92, 0.15);
-}
-
-.match-teams-box {
-    display: grid;
-    gap: 0.65rem;
-    margin-bottom: 0.8rem;
-}
-
-.match-teams-box span {
-    font-family: var(--font-condensed);
-    font-size: 1.25rem;
-    font-weight: 800;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-}
-
-.match-teams-box small,
-.match-footer,
-.hero-standings-mini small {
-    color: rgba(255,255,255,0.72);
-    font-family: var(--font-condensed);
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-}
-
-.hero-standings-mini small {
-    display: block;
-    margin-bottom: 0.85rem;
-}
-
-.standing-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
-    padding: 0.8rem 0;
-    border-top: 1px solid rgba(255,255,255,0.1);
-    color: white;
-}
-
-.standing-row:first-of-type {
-    border-top: 0;
-    padding-top: 0;
-}
-
-.standing-row span {
-    font-family: var(--font-condensed);
-    font-weight: 700;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-}
-
-.standing-row strong {
-    font-family: var(--font-display);
-    font-size: 1.65rem;
-    line-height: 1;
-}
-
 .hero-live-bar {
     background: linear-gradient(90deg, var(--brand-red-dark) 0%, var(--brand-red) 45%, var(--orange) 100%);
     box-shadow: 0 -14px 32px rgba(0,0,0,0.18);
@@ -3078,10 +2987,6 @@ footer {
 
     .hamburger {
         display: inline-flex;
-    }
-
-    .hero-sidebar-data {
-        display: grid;
     }
 }
 

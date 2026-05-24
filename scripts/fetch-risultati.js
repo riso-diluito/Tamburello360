@@ -155,8 +155,8 @@ function parsePartite(html, campionato, giornata) {
     partite.push({
       casa,
       ospite,
-      scoreCasa: setCasa > 0 ? setCasa : null, // Salva i set attuali, o null se 0
-      scoreOspite: setOspite > 0 ? setOspite : null, // Salva i set attuali, o null se 0
+      scoreCasa: isPlayed ? setCasa : (setCasa > 0 ? setCasa : null),
+      scoreOspite: isPlayed ? setOspite : (setOspite > 0 ? setOspite : null),
       tiebreak: isPlayed ? tiebreak : false, // Tiebreak è rilevante solo per partite finite
       data: dataPartita,
       ora: oraPartita,
