@@ -3319,7 +3319,7 @@ footer {
 .squadra-archive-toolbar {
     display: flex;
     align-items: end;
-    justify-content: space-between;
+    justify-content: flex-start;
     gap: 1rem;
     padding: 1.25rem 1.4rem;
     border-radius: 28px;
@@ -3335,8 +3335,7 @@ footer {
     gap: 0.3rem;
 }
 
-.squadra-archive-current-label,
-.squadra-round-jump-label {
+.squadra-archive-current-label {
     color: var(--gray-400);
     font-family: var(--font-condensed);
     font-size: 0.76rem;
@@ -3352,67 +3351,31 @@ footer {
     line-height: 0.95;
 }
 
-.squadra-round-jump {
-    display: grid;
-    gap: 0.45rem;
-    justify-items: end;
-}
-
-.squadra-round-jump-controls {
-    display: flex;
-    align-items: center;
-    gap: 0.7rem;
-}
-
-.squadra-round-input {
-    width: clamp(5rem, 10vw, 6.25rem);
-    min-height: 52px;
-    padding: 0.75rem 0.95rem;
-    border-radius: 18px;
-    border: 1px solid rgba(15, 23, 42, 0.1);
-    background: white;
-    color: var(--navy);
-    font-family: var(--font-condensed);
-    font-size: 1rem;
-    font-weight: 700;
-    text-align: center;
-    box-shadow: inset 0 1px 0 rgba(255,255,255,0.9);
-}
-
-.squadra-round-input:focus {
-    outline: 2px solid rgba(214, 40, 40, 0.22);
-    border-color: rgba(214, 40, 40, 0.3);
-}
-
-.squadra-round-button {
-    min-height: 52px;
-    padding: 0.8rem 1.3rem;
-    border: 0;
-    border-radius: 18px;
-    background: linear-gradient(135deg, var(--navy) 0%, var(--team-accent, var(--orange)) 100%);
-    color: white;
-    font-family: var(--font-condensed);
-    font-size: 0.92rem;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    cursor: pointer;
-    transition: transform var(--transition), box-shadow var(--transition);
-    box-shadow: 0 16px 32px rgba(15, 23, 42, 0.16);
-}
-
-.squadra-round-button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 20px 40px rgba(15, 23, 42, 0.18);
-}
-
 .squadra-round-chip-list {
     display: flex;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     gap: 0.7rem;
+    overflow-x: auto;
+    padding-bottom: 0.35rem;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(15, 23, 42, 0.24) transparent;
+}
+
+.squadra-round-chip-list::-webkit-scrollbar {
+    height: 8px;
+}
+
+.squadra-round-chip-list::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.squadra-round-chip-list::-webkit-scrollbar-thumb {
+    background: rgba(15, 23, 42, 0.22);
+    border-radius: 999px;
 }
 
 .squadra-round-chip {
+    flex: 0 0 auto;
     border: 0;
     border-radius: 999px;
     background: rgba(15, 23, 42, 0.06);
@@ -3509,11 +3472,6 @@ footer {
         align-items: start;
         flex-direction: column;
     }
-
-    .squadra-round-jump {
-        justify-items: start;
-        width: 100%;
-    }
 }
 
 @media (max-width: 640px) {
@@ -3534,12 +3492,7 @@ footer {
         font-size: 0.7rem;
     }
 
-    .squadra-round-jump-controls {
-        width: 100%;
-    }
-
-    .squadra-round-input {
-        flex: 1;
-        width: auto;
+    .squadra-round-chip-list {
+        margin-right: -0.25rem;
     }
 }

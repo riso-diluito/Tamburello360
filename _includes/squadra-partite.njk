@@ -19,23 +19,6 @@
                 <span class="squadra-archive-current-label">Giornata attiva</span>
                 <strong id="teamPartiteRoundLabel">1</strong>
             </div>
-
-            <form class="squadra-round-jump" id="teamPartiteRoundForm">
-                <label class="squadra-round-jump-label" for="teamPartiteRoundInput">Vai alla giornata</label>
-                <div class="squadra-round-jump-controls">
-                    <input
-                        class="squadra-round-input"
-                        id="teamPartiteRoundInput"
-                        name="giornata"
-                        type="number"
-                        inputmode="numeric"
-                        min="1"
-                        step="1"
-                        placeholder="Es. 8"
-                    >
-                    <button class="squadra-round-button" id="teamPartiteRoundSubmit" type="submit">Mostra</button>
-                </div>
-            </form>
         </div>
 
         <div class="squadra-round-chip-list" id="teamPartiteRoundChips" aria-label="Selezione rapida giornate"></div>
@@ -55,8 +38,6 @@
         const teamName = {{ team.name | dump | safe }};
         const list = document.getElementById('teamPartiteList');
         const roundLabel = document.getElementById('teamPartiteRoundLabel');
-        const roundInput = document.getElementById('teamPartiteRoundInput');
-        const roundForm = document.getElementById('teamPartiteRoundForm');
         const roundChips = document.getElementById('teamPartiteRoundChips');
         const allMatches = Array.isArray(window.partiteData) ? window.partiteData : [];
         const matches = allMatches.filter(match => match.home_team.name === teamName || match.away_team.name === teamName);
@@ -148,14 +129,7 @@
         }
 
         function updateToolbar() {
-            roundLabel.textContent = String(state.giornata);
-
-            if (roundInput) {
-                roundInput.min = String(availableRounds[0] || 1);
-                roundInput.max = String(getMaxRound());
-                roundInput.value = String(state.giornata);
-            }
-
+            roundLabel.textContent = `Giornata ${state.giornata}`;
             renderRoundChips();
         }
 
@@ -239,14 +213,6 @@
             state.giornata = clampRound(state.giornata);
             updateToolbar();
             renderList();
-        }
-
-        if (roundForm) {
-            roundForm.addEventListener('submit', (event) => {
-                event.preventDefault();
-                state.giornata = clampRound(roundInput ? roundInput.value : state.giornata);
-                render();
-            });
         }
 
         state.giornata = getCurrentRound();
