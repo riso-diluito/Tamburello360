@@ -5,7 +5,7 @@ tipo: outdoor
 giornata: 9
 home_team: Valgatara
 away_team: Cavrianese
-home_score: 
+home_score: 0
 away_score: 2
 tiebreak: false
 giocata: true

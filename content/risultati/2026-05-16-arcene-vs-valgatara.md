@@ -6,7 +6,7 @@ giornata: 8
 home_team: Arcene
 away_team: Valgatara
 home_score: 2
-away_score: 
+away_score: 0
 tiebreak: false
 giocata: true
 auto_generated: true
