@@ -5,9 +5,9 @@ tipo: outdoor
 giornata: 10
 home_team: Cavrianese
 away_team: Solferino
-home_score: 1
-away_score: 1
+home_score: 0
+away_score: 2
 tiebreak: false
-giocata: false
+giocata: true
 auto_generated: true
 ---
